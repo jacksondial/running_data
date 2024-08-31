@@ -24,7 +24,3 @@ activity_dat2 <- activity_dat |>
          minutes = trunc(elapsed_minutes),
          seconds = Elapsed.Time%%60) 
 
-ggplot(activity_dat2, aes(x = Elapsed.Time))+
-  geom_histogram()
-
-
