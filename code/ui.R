@@ -13,7 +13,8 @@ ui <- fluidPage(
           "Elapsed.Time",
           "Distance",
           "Max.Heart.Rate",
-          "Relative.Effort"
+          "Relative.Effort",
+          "Calories"
         )
       )
     ),

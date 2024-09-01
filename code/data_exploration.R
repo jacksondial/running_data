@@ -22,5 +22,6 @@ activity_dat2 <- activity_dat |>
          distance_miles = Distance * 0.62137,
          elapsed_minutes = Elapsed.Time / 60,
          minutes = trunc(elapsed_minutes),
-         seconds = Elapsed.Time%%60) 
+         seconds = Elapsed.Time%%60,
+         week = lubridate::week(date))
 
