@@ -25,3 +25,4 @@ activity_dat2 <- activity_dat |>
          seconds = Elapsed.Time%%60,
          week = lubridate::week(date))
 
+saveRDS(activity_dat2, "data/activity_dat2.RDS")
