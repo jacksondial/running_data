@@ -3,10 +3,11 @@
 
 barplot_fun <- function(x_var){
   ggplot(app_dat, aes(x = !!sym(x_var)))+
-    geom_histogram(aes(fill = "orange"))+
+    geom_histogram(aes(fill = "dodgerblue"))+
+    theme_bw()+
     theme(panel.grid.minor = element_blank(),
           legend.position = "none")+
-    scale_fill_manual(values = "orange2")
+    scale_fill_manual(values = "dodgerblue")
 }
 
 # corr_x_var <- "Elapsed.Time"
