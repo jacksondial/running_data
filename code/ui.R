@@ -1,7 +1,7 @@
 # UI for app
 source("inputs.R")
 source("landing_page.R")
-ui <- fluidPage(
+ui <- fluidPage( 
   titlePanel("Running Shiny App"),
   tags$head(
     tags$style(HTML("
@@ -13,42 +13,29 @@ ui <- fluidPage(
         padding: 20px;
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
       }
-      .small-box .inner {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-      }
       .small-box h3 {
         font-size: 34px;
         font-weight: bold;
         margin: 0;
       }
       .small-box p {
-        font-size: 18px; /* Adjust subtitle font size */
-        margin: 0;
-        padding-bottom: 10px;
+        font-size: 18px;
+        margin-bottom: 10px;
       }
-      .small-box .value-icon {
-        display: flex;
-        align-items: center;
-      }
-      .small-box .value-icon h3 {
-        margin: 0;
-        font-size: 34px;
-        font-weight: bold;
-      }
-      .small-box .value-icon .icon {
+      .small-box .icon {
         font-size: 50px;
         margin-left: 10px;
-        opacity: 1;
       }
+      
     "))
   ),
   tabsetPanel(
     tabPanel(
       "Landing Page",
+      fluidRow(),
       fluidRow(
-        total_miles_vb
+        total_miles_vb,
+        miles_24_vb
         )
     ),
   
