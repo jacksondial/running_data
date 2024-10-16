@@ -39,18 +39,39 @@ ui <- fluidPage(
         )
     ),
   
-  tabPanel(
-    "Exploration",
-    sidebarLayout(
-      sidebarPanel(
-        sharedInputsUI("explore")
-      ),
-      mainPanel(
-        fluidRow(
-          plotOutput("barplot")
+    tabPanel(
+      "Exploration",
+      sidebarLayout(
+        sidebarPanel(
+          width = 2,
+          conditionalPanel(
+            condition = "input.tabs == 'Barplot'",
+            barInputsUI("bar")
+          ),
+          conditionalPanel(
+            condition = "input.tabs == 'Correlation Plot'",
+            corrInputsUI("corr")
+          )
+        ),
+        mainPanel(
+          # Nested tabsetPanel for barplot and correlation plot
+          tabsetPanel(
+            id = "tabs",
+            tabPanel(
+              "Barplot",
+              fluidRow(
+                plotOutput("barplot")
+              )
+            ),
+            tabPanel(
+              "Correlation Plot",
+              fluidRow(
+                plotOutput("corr_plot") # Placeholder for correlation plot
+              )
+            )
+          )
         )
       )
-    )
   )
   )
 )
