@@ -14,7 +14,7 @@ barplot_fun <- function(x_var){
 # corr_y_var <- "Distance"
 # group_var <- "month"
 
-corr_plot <- function(corr_x_var, corr_y_var){
+corr_plot <- function(corr_x_var, corr_y_var, group_var){
   ggplot(app_dat)+
     geom_point(aes(x = !!sym(corr_x_var), 
                    y = !!sym(corr_y_var),
