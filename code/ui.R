@@ -1,14 +1,17 @@
 # UI for app
 source("inputs.R")
 source("landing_page.R")
-ui <- fluidPage( 
-  titlePanel("Running Shiny App"),
+source("init.R", local = TRUE)
+
+
+# future step would be to update to use bslib::page_navbar instead of navbarPage
+ui <- page_navbar(
+  # titlePanel("Running Shiny App"),
   tags$head(
     tags$style(HTML("
       .small-box {
         font-size: 24px;
         background-color: #00a65a !important;
-        color: white !important;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
@@ -26,19 +29,21 @@ ui <- fluidPage(
         font-size: 50px;
         margin-left: 10px;
       }
-      
+
     "))
   ),
-  tabsetPanel(
+  title = "Title",
+  id = "title",
     tabPanel(
       "Landing Page",
-      fluidRow(),
+      value = "landing_page",
+      card(
       fluidRow(
-        total_miles_vb,
-        miles_24_vb
+        column(total_miles_vb, width = 4),
+        column(miles_24_vb, width = 4)
         )
+      )
     ),
-  
     tabPanel(
       "Exploration",
       sidebarLayout(
@@ -72,6 +77,13 @@ ui <- fluidPage(
           )
         )
       )
-  )
+  
   )
 )
+
+
+
+
+
+
+
