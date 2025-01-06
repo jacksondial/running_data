@@ -21,8 +21,11 @@ corr_plot <- function(corr_x_var, corr_y_var, group_var){
                    color = as.factor(!!sym(group_var))),
                size = 2.5,
                alpha = .6)+
-    theme(panel.grid.minor = element_blank())+
-    scale_color_brewer(palette = "Paired")
+    theme_bw()+
+    theme(panel.grid.minor = element_blank(),
+          legend.position = "bottom")+
+    scale_color_brewer(palette = "Paired")+
+    labs(color = "")
   
 }
 

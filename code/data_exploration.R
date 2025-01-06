@@ -15,12 +15,16 @@ labelled::generate_dictionary(activity_dat)
 
 
 activity_dat2 <- activity_dat |> 
+  select(where(~ !all(is.na(.)))) |> # removes any columns that are all NA (only 1)
   mutate(date = mdy_hms(Activity.Date),
          day = day(date),
          month = month(date),
          year = year(date),
          distance_miles = Distance * 0.62137,
          elapsed_minutes = Elapsed.Time / 60,
+         moving_minutes = trunc(Moving.Time / 60),
+         moving_seconds = Moving.Time %% 1,
+         moving_total_c = paste0(moving_minutes, ":", moving_seconds),
          minutes = trunc(elapsed_minutes),
          seconds = Elapsed.Time%%60,
          week = lubridate::week(date))

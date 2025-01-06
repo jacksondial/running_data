@@ -71,14 +71,50 @@ ui <- page_navbar(
             tabPanel(
               "Correlation Plot",
               fluidRow(
-                plotOutput("corr_plot") # Placeholder for correlation plot
+                plotOutput("corr_plot")
               )
             )
           )
         )
       )
-  
+  ),
+  tabPanel(
+    "Prediction",
+    sidebarLayout(
+      sidebarPanel(
+        width = 2,
+        # numericInput(
+        #   "placeholder",
+        #   "Placeholder",
+        #   value = 5,
+        #   min = 0,
+        #   max = 10
+        # )
+        # Uncomment this when "siegelInputs" is defined
+        riegelInputsUI("riegel")
+      ),
+      mainPanel(
+        tabsetPanel(
+          id = "prediction_tabs", # Add an ID for the tabsetPanel
+          tabPanel(
+            "Riegel Method",
+            fluidRow(
+              h3("Riegel Method Output"),
+              textOutput("riegel_output") # Placeholder for Riegel method output
+            )
+          ),
+          tabPanel(
+            "Method 2",
+            fluidRow(
+              h3("Method 2 Output"),
+              textOutput("method2_output") # Placeholder for Method 2 output
+            )
+          )
+        )
+      )
+    )
   )
+  
 )
 
 

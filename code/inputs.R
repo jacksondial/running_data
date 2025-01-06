@@ -8,7 +8,7 @@ barInputsUI <- function(id){
       selected = "Elapsed.Time",
       choices = c(
         "Elapsed.Time",
-        "Distance",
+        "distance_miles",
         "Max.Heart.Rate",
         "Relative.Effort",
         "Calories"
@@ -26,7 +26,7 @@ corrInputsUI <- function(id){
       selected = "Elapsed.Time",
       choices = c(
         "Elapsed.Time",
-        "Distance",
+        "distance_miles",
         "Max.Heart.Rate",
         "Relative.Effort",
         "Calories"
@@ -38,7 +38,7 @@ corrInputsUI <- function(id){
       selected = "Distance",
       choices = c(
         "Elapsed.Time",
-        "Distance",
+        "distance_miles",
         "Max.Heart.Rate",
         "Relative.Effort",
         "Calories"
@@ -56,4 +56,22 @@ corrInputsUI <- function(id){
     )
   )
 }
+# time, distance 1, distance 2, c
+riegelInputsUI <- function(id){
+  ns <- NS(id)
+  tagList(
+    numericInput(
+      ns("t1"),
+      "Time 1 (Seconds)",
+      360
+    )
+  )
+}
   
+
+
+
+
+
+
+
