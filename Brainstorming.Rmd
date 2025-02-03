@@ -42,6 +42,11 @@ half-marathon race: 1:25:35
 $$
 T_2 = T_1 \times (\frac{D_2}{D_1})^c
 $$
+
 Where $T_1$ and $D_1$ are your known time and distance, $T_2$ is the predicted time for distance $D_2$, and $c$ is the decay factor to reflect pace changing over different distances, typically regarded as 1.06.
 
+
+## Other ideas:
+
+- Instead of predicting the time to run a certain distance, perhaps I could hav ethe input be a time+distance all out, as well as a pace goal and predict how much distance you could run at that goal pace
 

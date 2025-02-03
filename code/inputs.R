@@ -56,14 +56,25 @@ corrInputsUI <- function(id){
     )
   )
 }
+
 # time, distance 1, distance 2, c
 riegelInputsUI <- function(id){
   ns <- NS(id)
   tagList(
     numericInput(
       ns("t1"),
-      "Time 1 (Seconds)",
-      360
+      "Time 1 (Minutes)",
+      5
+    ),
+    selectizeInput(
+      ns("d1"),
+      "Completed Distance",
+      choices = c("1 Mile", "5K", "10K", "Half-Marathon", "Marathon")
+    ),
+    selectizeInput(
+      ns("d2"),
+      "Goal Distance",
+      choice = c("1 Mile", "5K", "10K", "Half-Marathon", "Marathon")
     )
   )
 }
