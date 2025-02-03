@@ -3,7 +3,6 @@ source("inputs.R")
 source("landing_page.R")
 source("init.R", local = TRUE)
 
-
 # future step would be to update to use bslib::page_navbar instead of navbarPage
 ui <- page_navbar(
   # titlePanel("Running Shiny App"),
@@ -99,7 +98,7 @@ ui <- page_navbar(
           tabPanel(
             "Riegel Method",
             fluidRow(
-              h3("Riegel Method Output"),
+              # h3("Riegel Method Output"),
               textOutput("riegel_output") # Placeholder for Riegel method output
             )
           ),

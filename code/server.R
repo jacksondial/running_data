@@ -15,4 +15,15 @@ server <- function(input, output, session){
     )
   })
   
+  riegel_calculation <- reactive({    
+    req(input$`riegel-t1`, input$`riegel-d1`, input$`riegel-d2`)  # Ensures inputs are available
+  
+    riegel_function(
+      t1 = input$`riegel-t1`,
+      d1 = input$`riegel-d1`,
+      d2 = input$`riegel-d2`
+    )
+  })
+
+  output$riegel_output <- renderText(paste0("Your predicted time is: ", riegel_calculation(), ", over a distance of ", input$`riegel-d1`))
 }
