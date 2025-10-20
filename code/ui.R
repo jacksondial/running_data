@@ -39,6 +39,7 @@ ui <- page_navbar(
       card(
       fluidRow(
         column(total_miles_vb, width = 4),
+        column(miles_25_vb, width = 4),
         column(miles_24_vb, width = 4)
         )
       )
@@ -62,7 +63,13 @@ ui <- page_navbar(
           tabsetPanel(
             id = "tabs",
             tabPanel(
-              "Barplot",
+              "Weekly Mileage",
+              fluidRow(
+                plotOutput("weekly_bar")
+              )
+            ),
+            tabPanel(
+              "Boring Barplot",
               fluidRow(
                 plotOutput("barplot")
               )
