@@ -16,16 +16,25 @@ total_miles_vb <- bslib::value_box(
   fill = TRUE,
   height = 200L
 )
+miles_25_vb <- bslib::value_box(
+  title = "Miles Ran in 2025",
+  value = app_dat |> filter(year == "2025", Activity.Type == "Run") |> summarize(total_distance = round(sum(distance_miles), 2)) |> pull(total_distance),
+  showcase = icon("person-running"),
+  theme = value_box_theme(bg = running_palette[4], fg = running_palette[4]),
+  fill = TRUE, 
+  height = 200L
+)
 
 miles_24_vb <- bslib::value_box(
   title = "Miles Ran in 2024",
   value = app_dat |> filter(year == "2024", Activity.Type == "Run") |> summarize(total_distance = round(sum(distance_miles), 2)) |> pull(total_distance),
   showcase = icon("person-running"),
-  theme = value_box_theme(bg = running_palette[2], fg = running_palette[1]),
+  theme = value_box_theme(bg = running_palette[1], fg = running_palette[5]),
   fill = TRUE, 
   height = 200L
 )
 
+# "#002147" "#A87C55" "#FFD700" "#8B1D1D" "#004E64" "#F4EDE4" "#3E2C1C" "#D4AF37" "#3B5A52" "#C65353"
 
 # miles_24_vb <- shinydashboard::valueBox(
 #   value = app_dat |> filter(year == "2024") |> summarize(total_distance = sum(Distance)) |> dplyr::pull(total_distance),

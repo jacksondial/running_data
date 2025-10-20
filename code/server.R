@@ -7,6 +7,10 @@ server <- function(input, output, session){
     barplot_fun(input$`bar-x_var`)
   })
   
+  output$weekly_bar <- renderPlot({
+    weekly_bar_fun()
+  })
+  
   output$corr_plot <- renderPlot({
     corr_plot(
       input$`corr-x_var`,
