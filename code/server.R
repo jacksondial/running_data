@@ -8,7 +8,9 @@ server <- function(input, output, session){
   })
   
   output$weekly_bar <- renderPlot({
-    weekly_bar_fun()
+    weekly_bar_fun(
+      input$`weekly`
+    )
   })
   
   output$corr_plot <- renderPlot({
@@ -29,5 +31,5 @@ server <- function(input, output, session){
     )
   })
 
-  output$riegel_output <- renderText(paste0("Your predicted time is: ", riegel_calculation(), ", over a distance of ", input$`riegel-d1`))
+  output$riegel_output <- renderText(paste0("Your predicted time is: ", riegel_calculation(), ", over a distance of ", input$`riegel-d2`))
 }

@@ -37,24 +37,43 @@ corr_plot <- function(corr_x_var, corr_y_var, group_var){
 ##### Weekly plot #####
 
 # this_week <- activity_dat2 |> filter(year == 2025, week_monday == 42)
-weekly_bar_fun <- function(){
+weekly_bar_fun <- function(weekly_plot_type){
   
-  weekly_dat <- activity_dat2 |> 
+  weekly_dat <- app_dat |> 
     group_by(year, week_monday) |> 
     summarise(weekly_mileage = sum(Distance)) |> 
     mutate(above_40_m = ifelse(weekly_mileage > 40, T, F))
   
-  ggplot(weekly_dat, aes(x = week_monday, y = weekly_mileage))+
-    geom_col(aes(fill = as.factor(year)))+
-    theme_bw()+
-    scale_fill_manual(values = running_palette)+
-    theme(panel.grid.major.x = element_blank(),
-          panel.grid.minor.x = element_blank()
-    )+
-    labs(
-      x = "Week of Year (Monday-Sunday)",
-      y = "Weekly Mileage",
-      fill = "Year")
-  
+  if (weekly_plot_type == "Stacked Bar"){
+    ggplot(weekly_dat, aes(x = week_monday, y = weekly_mileage))+
+      geom_col(aes(fill = as.factor(year)))+
+      theme_bw()+
+      scale_fill_manual(values = running_palette)+
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank()
+      )+
+      labs(
+        x = "Week of Year (Monday-Sunday)",
+        y = "Weekly Mileage",
+        fill = "Year")
+    
+  } else if (weekly_plot_type == "Line"){
+    ggplot(weekly_dat, aes(x = week_monday, y = weekly_mileage))+
+      geom_line(aes(color = as.factor(year)))+
+      geom_point(aes(color = as.factor(year)))+
+      theme_bw()+
+      scale_color_manual(values = running_palette)+
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank()
+      )+
+      labs(
+        x = "Week of Year (Monday-Sunday)",
+        y = "Weekly Mileage",
+        color = "Year")
+  }
   
 }
+
+
+
+

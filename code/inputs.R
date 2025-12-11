@@ -57,6 +57,23 @@ corrInputsUI <- function(id){
   )
 }
 
+
+weeklyInputsUI <- function(id){
+  ns <- NS(id)
+  tagList(
+    selectInput(
+      ns("weekly_plot_type"),
+      "Plot Style",
+      selected = "Stacked Bar",
+      choices = c(
+        "Stacked Bar",
+        "Line",
+        "Other?"
+      )
+    )
+  )
+}
+
 # time, distance 1, distance 2, c
 riegelInputsUI <- function(id){
   ns <- NS(id)
