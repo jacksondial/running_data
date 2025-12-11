@@ -3,7 +3,8 @@ pacman::p_load(
   lubridate,
   ggplot2,
   shinydashboard,
-  bslib
+  bslib,
+  shiny
 )
 print(getwd())
 source("riegel_calculation.R")

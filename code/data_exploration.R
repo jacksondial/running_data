@@ -23,7 +23,7 @@ activity_dat2 <- activity_dat |>
          distance_miles = Distance * 0.62137,
          elapsed_minutes = Elapsed.Time / 60,
          moving_minutes = trunc(Moving.Time / 60),
-         moving_seconds = Moving.Time %% 1,
+         moving_seconds = Moving.Time %% 60,
          moving_total_c = paste0(moving_minutes, ":", moving_seconds),
          minutes = trunc(elapsed_minutes),
          seconds = Elapsed.Time%%60,
@@ -32,7 +32,19 @@ activity_dat2 <- activity_dat |>
          # which is important for plotting weekly mileage since i structure my weekly
          # schedule that way and not based on the actual week number of the year
          week_monday = isoweek(date),
-         year_monday = isoyear(date) 
+         year_monday = isoyear(date),
+         # Need to make a speed for MPH, then use that to calculate pace in mph
+         # avg_speed_mph = Average.Speed / 1.609344,
+         avg_speed_mph = (distance_miles / Moving.Time) * 3600,
+         avg_pace_mile = 60 / avg_speed_mph,
+         avg_pace_mile_min = trunc(avg_pace_mile),
+         avg_pace_mile_sec = trunc(avg_pace_mile %% 1 * 60),
+         avg_pace_mile_c = case_when(
+           nchar(avg_pace_mile_sec) == 2 ~ paste0(avg_pace_mile_min, ":", avg_pace_mile_sec),
+           nchar(avg_pace_mile_sec) == 1 ~ paste0(avg_pace_mile_min, ":0", avg_pace_mile_sec)
+         )
+         # avg_pace_min = 
+         # avg_speed_test = 60/Average.Speed
          )
 
 saveRDS(activity_dat2, "data/activity_dat2.RDS")
