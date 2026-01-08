@@ -9,7 +9,11 @@ pacman::p_load(
 activity_dat <- read.csv("data/strava/October_19_2025/activities.csv") |> 
   select(where(~ !all(is.na(.))), -Athlete.Weight) |> # Remove all columns that are all missing values
   filter(Activity.Type == "Run",
-         Elapsed.Time < 100000)
+         Elapsed.Time < 100000,
+         Activity.ID != 2601897999 # this filer removes the first record, it is
+                                  # approximately one year before the next activity
+                                  # and is essentially an outlier
+         )
 
 labelled::generate_dictionary(activity_dat)
 
