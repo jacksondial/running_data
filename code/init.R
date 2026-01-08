@@ -4,7 +4,8 @@ pacman::p_load(
   ggplot2,
   shinydashboard,
   bslib,
-  shiny
+  shiny,
+  tidyr
 )
 print(getwd())
 source("riegel_calculation.R")
