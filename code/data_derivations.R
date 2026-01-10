@@ -24,7 +24,10 @@ daily_dat <- app_dat %>%
   ) |> 
   ### Training Structure metrics
   mutate(
-    monotony = acute_load / zoo::rollapply(daily_miles, 7, sd, fill = NA, align = "right"),
+    # monotony is giving -Inf for some and it is causing issues for readiness calculation
+    # monotony = acute_load / zoo::rollapply(daily_miles, 7, sd, fill = NA, align = "right"),
+    rolling_sd = zoo::rollapply(daily_miles, 7, sd, fill = NA, align = "right"),
+    monotony = ifelse(rolling_sd == 0, NA, acute_load / rolling_sd),
     strain   = acute_load * monotony,
     ramp_rate = acute_load / dplyr::lag(acute_load, 7)
   ) |> 

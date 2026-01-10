@@ -44,6 +44,14 @@ ui <- page_navbar(
         )
       )
     ),
+  tabPanel(
+    "Load & Training Status",
+    mainPanel(
+      card(
+        plotOutput("load_plot")
+      )
+    )
+  ),
     tabPanel(
       "Exploration",
       sidebarLayout(
