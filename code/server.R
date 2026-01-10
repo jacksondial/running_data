@@ -3,6 +3,11 @@ source("init.R")
 
 server <- function(input, output, session){
   source("plots.R")
+  output$load_plot <- renderPlot({
+    load_plot_fun()
+    })
+  
+  
   output$barplot <- renderPlot({
     barplot_fun(input$`bar-x_var`)
   })

@@ -75,5 +75,18 @@ weekly_bar_fun <- function(weekly_plot_type){
 }
 
 
+load_plot_fun <- function() {
+  ggplot(daily_dat, aes(x = date)) +
+    geom_line(aes(y = acute_load, color = "Acute (7d)"), linewidth = 1) +
+    geom_line(aes(y = chronic_load, color = "Chronic (28d)"), linewidth = 1) +
+    theme_bw() +
+    labs(
+      x = "Date",
+      y = "Miles",
+      color = "Load",
+      title = "Training Load Over Time"
+    )+
+    scale_color_manual(values = c("lightpink", "dodgerblue"))
+}
 
 
