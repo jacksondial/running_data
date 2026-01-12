@@ -38,7 +38,7 @@ corr_plot <- function(corr_x_var, corr_y_var, group_var){
 
 # this_week <- activity_dat2 |> filter(year == 2025, week_monday == 42)
 weekly_bar_fun <- function(weekly_plot_type){
-  
+  print(c("here jack", weekly_plot_type))
   weekly_dat <- app_dat |> 
     group_by(year, week_monday) |> 
     summarise(weekly_mileage = sum(Distance)) |> 

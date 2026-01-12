@@ -12,17 +12,18 @@ source("riegel_calculation.R")
 
 app_dat <- readRDS("../data/activity_dat2.RDS")
 running_palette <- c(
-  "#002147", # Dark Navy Blue
-  "#A87C55", # Warm Camel Brown
-  "#FFD700", # Gold Yellow
-  "#8B1D1D", # Rich Burgundy Red
-  "#004E64", # Deep Teal
-  "#F4EDE4", # Warm Beige
-  "#3E2C1C", # Deep Brown
-  "#D4AF37", # Brass Gold
-  "#3B5A52", # Forest Green
-  "#C65353"  # Coral Red
+  "#0B2545",  # Deep performance navy
+  "#1B998B",  # Fresh teal
+  "#E84855",  # Energetic red
+  "#F9C846",  # Warm gold
+  "#2E7D32",  # Strong green
+  "#5FA8D3",  # Sky blue
+  "#6C4AB6",  # Modern purple accent
+  "#F4F1EC",  # Clean warm light
+  "#2F2F2F",  # Soft black / charcoal
+  "#FF9F1C"   # Bright orange accent
 )
+
 # Function to convert from minutes to a formatted duration
 format_duration <- function(minutes) {
   duration <- seconds_to_period(minutes * 60)  # Convert minutes to seconds
