@@ -64,6 +64,10 @@ ui <- page_navbar(
           conditionalPanel(
             condition = "input.tabs == 'Correlation Plot'",
             corrInputsUI("corr")
+          ),
+          conditionalPanel(
+            condition = "input.tabs == 'Weekly Mileage'",
+            weeklyInputsUI("weekly")
           )
         ),
         mainPanel(
@@ -77,7 +81,7 @@ ui <- page_navbar(
               )
             ),
             tabPanel(
-              "Boring Barplot",
+              "Barplot",
               fluidRow(
                 plotOutput("barplot")
               )

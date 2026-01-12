@@ -9,12 +9,14 @@ server <- function(input, output, session){
   
   
   output$barplot <- renderPlot({
-    barplot_fun(input$`bar-x_var`)
+    barplot_fun(
+      input$`bar-x_var`
+      )
   })
-  
+
   output$weekly_bar <- renderPlot({
     weekly_bar_fun(
-      input$`weekly`
+      input$`weekly-weekly_plot_type`
     )
   })
   
