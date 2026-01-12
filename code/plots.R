@@ -75,6 +75,10 @@ weekly_bar_fun <- function(weekly_plot_type){
 }
 
 
+#####################
+##### Load plot #####
+#####################
+
 load_plot_fun <- function() {
   ggplot(daily_dat, aes(x = date)) +
     geom_line(aes(y = acute_load, color = "Acute (7d)"), linewidth = 1) +
@@ -89,4 +93,58 @@ load_plot_fun <- function() {
     scale_color_manual(values = c("lightpink", "dodgerblue"))
 }
 
+########################
+##### Chronic load #####
+########################
+
+# Need to look at what this means a bit more
+ratio_plot_fun <- function() {
+  ggplot(daily_dat, aes(x = date, y = load_ratio)) +
+    geom_line() +
+    geom_hline(yintercept = c(0.8, 1.3, 1.5), linetype = "dashed", alpha = 0.5) +
+    theme_bw() +
+    labs(
+      title = "Acute : Chronic Load Ratio",
+      y = "Load Ratio",
+      x = "Date"
+    )
+}
+
+#########################
+##### Fitness Trend #####
+#########################
+fitness_model <- mgcv::gam(best_30d_speed ~ s(as.numeric(date)), data = efforts)
+
+efforts$fitness_hat <- predict(fitness_model)
+
+fitness_plot_fun <- function() {
+  ggplot(efforts, aes(x = date)) +
+    geom_point(aes(y = best_30d_speed), alpha = 0.3) +
+    geom_line(aes(y = fitness_hat), color = "blue", linewidth = 1) +
+    theme_bw() +
+    labs(
+      title = "Estimated Fitness Trend",
+      y = "Best 30-day Speed (mph)",
+      x = "Date"
+    )
+}
+
+
+
+##### Load fitness #####
+
+load_fitness_fun <- function() {
+  ggplot(
+    daily_dat |> filter(!is.na(acute_load)),
+    aes(x = acute_load, y = readiness)
+  ) +
+    geom_point(alpha = 0.4) +
+    geom_smooth(method = "gam") +
+    theme_bw() +
+    labs(
+      title = "Training Load vs Readiness",
+      x = "Acute Load",
+      y = "Readiness Score"
+    )
+}
 
