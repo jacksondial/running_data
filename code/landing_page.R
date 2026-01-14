@@ -20,7 +20,7 @@ miles_25_vb <- bslib::value_box(
   title = "Miles Ran in 2025",
   value = app_dat |> filter(year == "2025", Activity.Type == "Run") |> summarize(total_distance = round(sum(distance_miles), 2)) |> pull(total_distance),
   showcase = icon("person-running"),
-  theme = value_box_theme(bg = running_palette[4], fg = running_palette[4]),
+  theme = value_box_theme(bg = running_palette[1], fg = running_palette[4]),
   fill = TRUE, 
   height = 200L
 )
@@ -42,3 +42,25 @@ miles_24_vb <- bslib::value_box(
 #   icon = icon("running"),
 #   width = 4
 # )
+
+latest <- daily_dat |> filter(date == max(date))
+
+readiness_box <- bslib::value_box(
+  title = "Readiness",
+  value = latest$insight,
+  showcase = icon("heartbeat"),
+  theme = value_box_theme(bg = running_palette[1], fg = running_palette[6]),
+  fill = TRUE,
+  height = 200L
+)
+
+# readiness_box <- renderUI({
+#   valueBox(
+#     value = round(latest$readiness, 2),
+#     subtitle = latest$insight,
+#     icon = icon("heartbeat"),
+#     color = ifelse(latest$readiness > 1, "green", "orange")
+#   )
+# })
+
+

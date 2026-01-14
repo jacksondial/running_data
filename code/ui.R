@@ -3,8 +3,21 @@ source("inputs.R")
 source("landing_page.R")
 source("init.R", local = TRUE)
 
+
+dark_theme <- bs_theme(
+  version = 5,
+  bg = "#0E1117",
+  fg = "#E6E6E6",
+  primary = "#FFD700",
+  secondary = "#004E64",
+  base_font = font_google("Inter"),
+  heading_font = font_google("Inter")
+)
+
+
 # future step would be to update to use bslib::page_navbar instead of navbarPage
 ui <- page_navbar(
+  theme = dark_theme,
   # titlePanel("Running Shiny App"),
   tags$head(
     tags$style(HTML("
@@ -31,7 +44,7 @@ ui <- page_navbar(
 
     "))
   ),
-  title = "Title",
+  title = "Exercise Data",
   id = "title",
     tabPanel(
       "Landing Page",
@@ -41,7 +54,9 @@ ui <- page_navbar(
         column(total_miles_vb, width = 4),
         column(miles_25_vb, width = 4),
         column(miles_24_vb, width = 4)
-        )
+        ),
+      fluidRow(),
+      fluidRow(readiness_box, width = 4)
       )
     ),
   tabPanel(

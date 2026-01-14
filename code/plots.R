@@ -115,7 +115,7 @@ ratio_plot_fun <- function() {
 #########################
 fitness_model <- mgcv::gam(best_30d_speed ~ s(as.numeric(date)), data = efforts)
 
-efforts$fitness_hat <- predict(fitness_model)
+# efforts$fitness_hat <- predict(fitness_model)
 
 fitness_plot_fun <- function() {
   ggplot(efforts, aes(x = date)) +
@@ -136,7 +136,7 @@ fitness_plot_fun <- function() {
 load_fitness_fun <- function() {
   ggplot(
     daily_dat |> filter(!is.na(acute_load)),
-    aes(x = acute_load, y = readiness)
+    aes(x = acute_load, y = readiness, color = as.factor(year))
   ) +
     geom_point(alpha = 0.4) +
     geom_smooth(method = "gam") +
@@ -144,7 +144,12 @@ load_fitness_fun <- function() {
     labs(
       title = "Training Load vs Readiness",
       x = "Acute Load",
-      y = "Readiness Score"
-    )
+      y = "Readiness Score",
+      color = "Year"
+    )+
+    scale_color_manual(values = running_palette)
 }
+
+
+
 
