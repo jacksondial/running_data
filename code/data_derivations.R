@@ -41,7 +41,8 @@ daily_dat <- app_dat %>%
       chronic_load > quantile(chronic_load, .9, na.rm=TRUE) ~ "Peak training load",
       readiness > 1 ~ "High readiness window",
       TRUE ~ "Normal training load"
-    )
+    ),
+    year = lubridate::year(date)
   )
 
 
