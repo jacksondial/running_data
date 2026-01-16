@@ -17,7 +17,7 @@ dark_theme <- bs_theme(
 
 # future step would be to update to use bslib::page_navbar instead of navbarPage
 ui <- page_navbar(
-  theme = dark_theme,
+  # theme = "styles.css", # this does not work atm
   # titlePanel("Running Shiny App"),
   tags$head(
     tags$style(HTML("
@@ -41,7 +41,7 @@ ui <- page_navbar(
         font-size: 50px;
         margin-left: 10px;
       }
-
+      
     "))
   ),
   title = "Exercise Data",

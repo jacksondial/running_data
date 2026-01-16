@@ -1,0 +1,15 @@
+/* www/styles.css */
+.navbar-default {
+  background-color: #002B36 !important; /* Change the background color */
+  color: #FFF !important;              /* Change the text color */
+}
+
+/* Change link color in the navbar */
+.navbar-default .navbar-brand {
+  color: white !important;
+}
+
+/* Change link color on hover */
+.navbar-default .navbar-nav > li > a:hover {
+  color: #aaaaaa !important;
+}

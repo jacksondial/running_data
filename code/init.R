@@ -5,7 +5,8 @@ pacman::p_load(
   shinydashboard,
   bslib,
   shiny,
-  tidyr
+  tidyr,
+  glue
 )
 print(getwd())
 source("riegel_calculation.R")
