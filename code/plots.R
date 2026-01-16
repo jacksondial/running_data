@@ -78,9 +78,10 @@ weekly_bar_fun <- function(weekly_plot_type){
 #####################
 ##### Load plot #####
 #####################
-
+install.packages("ggiraph")
+library(ggiraph)
 load_plot_fun <- function() {
-  ggplot(daily_dat, aes(x = date)) +
+  p <- ggplot(daily_dat, aes(x = date)) +
     geom_line(aes(y = acute_load, color = "Acute (7d)"), linewidth = 1) +
     geom_line(aes(y = chronic_load, color = "Chronic (28d)"), linewidth = 1) +
     theme_bw() +
@@ -90,7 +91,125 @@ load_plot_fun <- function() {
       color = "Load",
       title = "Training Load Over Time"
     )+
-    scale_color_manual(values = c("lightpink", "dodgerblue"))
+    scale_color_manual(values = running_palette)
+  girafe(ggobj = p)
+  
+  
+  
+  
+tooltip = paste0(
+    "<b>", date, "</b>",
+    "<br>Acute: ", round(acute_load, 1),
+    "<br>Chronic: ", round(chronic_load, 1)
+  )
+  
+  p <- ggplot(daily_dat, aes(x = date)) +
+    geom_line_interactive(
+      aes(
+        y = acute_load,
+        color = "Acute (7d)",
+        group = "Acute (7d)",
+        # tooltip = glue(
+        #   "
+        #   Date: {date}
+        #   Acute load: {round(acute_load, 1)} mi
+        #   Chronic load: {round(chronic_load, 1)} mi
+        #   "
+        # )
+    ) ,
+    linewidth = 1
+    ) +
+  geom_line_interactive(
+      aes(
+        y = chronic_load,
+        color = "Chronic (28d)",
+        group = "Chronic (28d)",
+        # tooltip = glue(
+        #   "
+        #   Date: {date}
+        #   Acute load: {round(acute_load, 1)} mi
+        #   Chronic load: {round(chronic_load, 1)} mi
+        #   "
+        # )
+        # data_id = paste0("chronic_", date)
+      ),
+      linewidth = 1
+    ) +
+    
+    geom_point_interactive(
+      aes(
+        y = acute_load,
+        tooltip = glue(
+          "
+          Date: {date}
+          Acute load: {round(acute_load, 1)} mi
+          Chronic load: {round(chronic_load, 1)} mi
+          "
+        ),
+        # data_id = paste0("pt_", date)
+      ),
+      size = 1.8,
+      alpha = 0
+    ) +
+    geom_point_interactive(
+      aes(
+        y = chronic_load,
+        tooltip = glue(
+          "
+          Date: {date}
+          Acute load: {round(acute_load, 1)} mi
+          Chronic load: {round(chronic_load, 1)} mi
+          "
+        ),
+        # data_id = paste0("pt_", date)
+      ),
+      size = 1.8,
+      alpha = 0
+    ) +
+    labs(
+      x = "Date",
+      y = "Miles",
+      color = "Load",
+      title = "Training Load Over Time"
+    ) +
+    
+    scale_color_manual(values = running_palette) +
+    theme_minimal()
+  
+p
+  
+  
+  girafe(
+    ggobj = p,
+    width_svg = 10,
+    height_svg = 5,
+    options = list(
+      opts_hover(css = "stroke-width:3;opacity:1;"),
+      opts_hover_inv(css = "opacity:0.15;"),
+      opts_tooltip(
+        css = "
+        background-color: #141822;
+        color: #E6E6E6;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      "
+      ),
+      opts_zoom(max = 6),
+      opts_selection(type = "single", css = "stroke-width:4;"),
+      opts_toolbar(saveaspng = TRUE, position = "topright")
+    )
+  )
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }
 
 ########################
