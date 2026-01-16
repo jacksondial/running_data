@@ -3,7 +3,7 @@ source("init.R")
 
 server <- function(input, output, session){
   source("plots.R")
-  output$load_plot <- renderPlot({
+  output$load_plot <- renderGirafe({
     load_plot_fun()
     })
   
