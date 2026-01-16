@@ -78,31 +78,22 @@ weekly_bar_fun <- function(weekly_plot_type){
 #####################
 ##### Load plot #####
 #####################
-install.packages("ggiraph")
+# install.packages("ggiraph")
 library(ggiraph)
 load_plot_fun <- function() {
-  p <- ggplot(daily_dat, aes(x = date)) +
-    geom_line(aes(y = acute_load, color = "Acute (7d)"), linewidth = 1) +
-    geom_line(aes(y = chronic_load, color = "Chronic (28d)"), linewidth = 1) +
-    theme_bw() +
-    labs(
-      x = "Date",
-      y = "Miles",
-      color = "Load",
-      title = "Training Load Over Time"
-    )+
-    scale_color_manual(values = running_palette)
-  girafe(ggobj = p)
-  
-  
-  
-  
-tooltip = paste0(
-    "<b>", date, "</b>",
-    "<br>Acute: ", round(acute_load, 1),
-    "<br>Chronic: ", round(chronic_load, 1)
-  )
-  
+  # p <- ggplot(daily_dat, aes(x = date)) +
+  #   geom_line(aes(y = acute_load, color = "Acute (7d)"), linewidth = 1) +
+  #   geom_line(aes(y = chronic_load, color = "Chronic (28d)"), linewidth = 1) +
+  #   theme_bw() +
+  #   labs(
+  #     x = "Date",
+  #     y = "Miles",
+  #     color = "Load",
+  #     title = "Training Load Over Time"
+  #   )+
+  #   scale_color_manual(values = running_palette)
+  # girafe(ggobj = p)
+
   p <- ggplot(daily_dat, aes(x = date)) +
     geom_line_interactive(
       aes(
@@ -175,8 +166,6 @@ tooltip = paste0(
     
     scale_color_manual(values = running_palette) +
     theme_minimal()
-  
-p
   
   
   girafe(

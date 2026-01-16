@@ -63,7 +63,7 @@ ui <- page_navbar(
     "Load & Training Status",
     mainPanel(
       card(
-        plotOutput("load_plot")
+        girafeOutput("load_plot")
       )
     )
   ),
