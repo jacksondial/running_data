@@ -5,18 +5,7 @@
 # install.packages("ggiraph")
 library(ggiraph)
 load_plot_fun <- function(time_window) {
-  # p <- ggplot(daily_dat, aes(x = date)) +
-  #   geom_line(aes(y = acute_load, color = "Acute (7d)"), linewidth = 1) +
-  #   geom_line(aes(y = chronic_load, color = "Chronic (28d)"), linewidth = 1) +
-  #   theme_bw() +
-  #   labs(
-  #     x = "Date",
-  #     y = "Miles",
-  #     color = "Load",
-  #     title = "Training Load Over Time"
-  #   )+
-  #   scale_color_manual(values = running_palette)
-  # girafe(ggobj = p)
+ 
   print(c("load window:", time_window))
   if (time_window == "Week"){
     time_window_numeric <- -7
@@ -45,13 +34,6 @@ load_plot_fun <- function(time_window) {
         y = acute_load,
         color = "Acute (7d)",
         group = "Acute (7d)",
-        # tooltip = glue(
-        #   "
-        #   Date: {date}
-        #   Acute load: {round(acute_load, 1)} mi
-        #   Chronic load: {round(chronic_load, 1)} mi
-        #   "
-        # )
       ) ,
       linewidth = 1
     ) +
@@ -60,18 +42,9 @@ load_plot_fun <- function(time_window) {
         y = chronic_load,
         color = "Chronic (28d)",
         group = "Chronic (28d)",
-        # tooltip = glue(
-        #   "
-        #   Date: {date}
-        #   Acute load: {round(acute_load, 1)} mi
-        #   Chronic load: {round(chronic_load, 1)} mi
-        #   "
-        # )
-        # data_id = paste0("chronic_", date)
       ),
       linewidth = 1
     ) +
-    
     geom_point_interactive(
       aes(
         y = acute_load,
@@ -82,9 +55,8 @@ load_plot_fun <- function(time_window) {
           Chronic load: {round(chronic_load, 1)} mi
           "
         ),
-        # data_id = paste0("pt_", date)
       ),
-      size = 1.8,
+      size = 1,
       alpha = 0
     ) +
     geom_point_interactive(
@@ -97,9 +69,8 @@ load_plot_fun <- function(time_window) {
           Chronic load: {round(chronic_load, 1)} mi
           "
         ),
-        # data_id = paste0("pt_", date)
       ),
-      size = 1.8,
+      size = 1,
       alpha = 0
     ) +
     labs(
@@ -108,13 +79,10 @@ load_plot_fun <- function(time_window) {
       color = "Load",
       title = "Training Load Over Time"
     ) +
-    
+
     scale_color_manual(values = running_palette) +
     theme_minimal()+
   theme(legend.position = "bottom")
-  p
-  
-  
   
   girafe(
     ggobj = p,
@@ -137,16 +105,7 @@ load_plot_fun <- function(time_window) {
       opts_toolbar(saveaspng = TRUE, position = "topright")
     )
   )
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
 }
 
 ########################
@@ -169,21 +128,11 @@ ratio_plot_fun <- function() {
 #########################
 ##### Fitness Trend #####
 #########################
-fitness_model <- mgcv::gam(best_30d_speed ~ s(as.numeric(date)), data = efforts)
+
 
 # efforts$fitness_hat <- predict(fitness_model)
 
-fitness_plot_fun <- function() {
-  ggplot(efforts, aes(x = date)) +
-    geom_point(aes(y = best_30d_speed), alpha = 0.3) +
-    geom_line(aes(y = fitness_hat), color = "blue", linewidth = 1) +
-    theme_bw() +
-    labs(
-      title = "Estimated Fitness Trend",
-      y = "Best 30-day Speed (mph)",
-      x = "Date"
-    )
-}
+
 
 
 

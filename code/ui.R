@@ -132,7 +132,7 @@ ui <- page_navbar(
         #   min = 0,
         #   max = 10
         # )
-        # Uncomment this when "siegelInputs" is defined
+        # Uncomment this when "riegelInputs" is defined
         riegelInputsUI("riegel")
       ),
       mainPanel(
@@ -156,7 +156,6 @@ ui <- page_navbar(
       )
     )
   )
-  
 )
 
 

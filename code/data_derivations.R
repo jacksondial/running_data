@@ -46,28 +46,12 @@ daily_dat <- app_dat %>%
   )
 
 
-
-##### 
-## Adding in performance and fitness layer
-#####
-
-# This is complete chatgpt's creation; i have no idea what it is at the moment
-efforts <- app_dat %>%
-  mutate(speed = avg_speed_mph) %>%
-  arrange(date) %>%
-  mutate(
-    best_30d_speed = zoo::rollapply(
-      speed, 
-      width = 30,
-      FUN = max,
-      by = 1,
-      fill = NA,
-      align = "right"
-    )
-  )
-fitness_model <- mgcv::gam(best_30d_speed ~ s(as.numeric(date)), data = efforts)
-
-
-
+# 
+# output$status_table <- renderTable({
+#   daily_dat %>%
+#     arrange(desc(date)) %>%
+#     select(date, daily_miles, acute_load, chronic_load, readiness, insight) %>%
+#     head(14)
+# })
 
 

@@ -1,0 +1,13 @@
+January 19, 2026:
+
+Next steps would be to investigate the COROS data, ideally in python, to see if those files
+provide a more in-depth breakdown of each workout. right now the strava data is missing 
+features that model variability within a workout, like if i do intervals it doesn't represent
+that very well. 
+if the coros data doesn't have that, maybe I can look at the strava data more and use HR as an
+indicator; like if the max HR is 20% different from the average. It would be very helpful if
+somewhere in one of the datasets it showed the number of 'laps' and compared that to the
+mileage, indicating that there intervals run if there are more laps than there are miles
+since the default lap is one mile.
+
+
