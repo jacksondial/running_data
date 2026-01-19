@@ -2,9 +2,10 @@
 source("init.R")
 
 server <- function(input, output, session){
-  source("plots.R")
+  source("exploratory_plots.R")
+  source("analysis_plots.R")
   output$load_plot <- renderGirafe({
-    load_plot_fun()
+    load_plot_fun(input$`load-load_window`)
     })
   
   

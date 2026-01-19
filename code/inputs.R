@@ -1,4 +1,28 @@
 
+loadInputsUI <- function(id){
+  ns <- NS(id)
+  tagList(
+    selectInput(
+      ns("load_window"),
+      "Choose Time Frame",
+      selected = "3 Months",
+      choices = c(
+        "Week",
+        "Month",
+        "3 Months",
+        "6 Months",
+        "1 Year",
+        "2 Years",
+        "All"
+      )
+    )
+  )
+}
+
+
+
+
+
 barInputsUI <- function(id){
   ns <- NS(id)
   tagList(
