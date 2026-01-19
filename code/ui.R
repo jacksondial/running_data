@@ -61,9 +61,18 @@ ui <- page_navbar(
     ),
   tabPanel(
     "Load & Training Status",
-    mainPanel(
-      card(
-        girafeOutput("load_plot")
+    sidebarLayout(
+      sidebarPanel(
+        width = 2,
+        # conditionalPanel(
+        #   condition = "input.tabs == 'Load & Training Status",
+          loadInputsUI("load")
+        # )
+      ),
+      mainPanel(
+        card(
+          girafeOutput("load_plot")
+        )
       )
     )
   ),
