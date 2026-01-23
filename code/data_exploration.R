@@ -52,3 +52,18 @@ activity_dat2 <- activity_dat |>
          )
 
 saveRDS(activity_dat2, "data/activity_dat2.RDS")
+
+##### Look into the Intensity and Load columns in the strava data
+# colnames -> Training.Load & intensity
+
+summary(activity_dat2$Training.Load)
+summary(activity_dat2$Intensity)
+sum(is.na(activity_dat2$Intensity)) / nrow(activity_dat2)
+# Both of the above cols have 334 NA's which is 43%, so either one of them is dependent
+# on the other or they both started being recorded at the same time
+
+
+summary(activity_dat2$Recovery)
+nrow(activity_dat2)
+
+
