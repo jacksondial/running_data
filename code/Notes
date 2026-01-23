@@ -11,3 +11,12 @@ mileage, indicating that there intervals run if there are more laps than there a
 since the default lap is one mile.
 
 
+January 22, 2026:
+
+Still thinking about that ^^^ but there is actually an intensity column in the original
+strava activity data (activity_dat) but seems to have a lot of missingness so I need to
+start figuring that out
+
+IDEA: Use a classification algorithm like k-means to group runs into categories like
+Long run, interval run, easy, long run workout. 
+Input vars would be: distance, average pace, 
