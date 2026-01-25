@@ -167,7 +167,7 @@ ratio_plot_fun <- function() {
 # hypothesis or perhaps tweak some of my calculations such as by putting 
 # coefficients in front of the readiness score values to more closely model 
 # my empirical evidence
-load_fitness_fun <- function() {
+load_readiness_fun <- function() {
   ggplot(
     daily_dat |> filter(!is.na(acute_load)),
     aes(x = acute_load, y = readiness, color = as.factor(year))
