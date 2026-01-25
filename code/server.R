@@ -2,6 +2,8 @@
 source("init.R")
 
 server <- function(input, output, session){
+  # bs_themer()
+  # bs_theme_update(theme, font_scale = NULL, preset = "flatly")
   source("exploratory_plots.R")
   source("analysis_plots.R")
   output$load_plot <- renderGirafe({
