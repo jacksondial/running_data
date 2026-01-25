@@ -19,6 +19,17 @@ dark_theme <- bs_theme(
 ui <- page_navbar(
   # theme = "styles.css", # this does not work atm
   # titlePanel("Running Shiny App"),
+  # bs_theme_update(theme, font_scale = NULL, preset = "flatly"),
+  theme = bs_theme(
+    version = 5,
+    bootswatch = "flatly",
+    primary = "#2C7BE5",
+    success = "#00a65a",
+    base_font = font_google("Inter"),
+    font_scale = 1.1
+  ),
+  
+  # theme = bs_theme(bootswatch = "flatly"),
   tags$head(
     tags$style(HTML("
       .small-box {
