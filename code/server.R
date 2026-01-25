@@ -8,6 +8,9 @@ server <- function(input, output, session){
     load_plot_fun(input$`load-load_window`)
     })
   
+  output$load_readiness_plot <- renderPlot({
+    load_readiness_fun()
+  })
   
   output$barplot <- renderPlot({
     barplot_fun(

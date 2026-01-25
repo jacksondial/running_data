@@ -64,14 +64,26 @@ ui <- page_navbar(
     sidebarLayout(
       sidebarPanel(
         width = 2,
-        # conditionalPanel(
-        #   condition = "input.tabs == 'Load & Training Status",
+        conditionalPanel(
+          condition = "input.analysis_tabs == 'Training Load'",
           loadInputsUI("load")
-        # )
-      ),
+          ),
+        ),
       mainPanel(
-        card(
-          girafeOutput("load_plot")
+        tabsetPanel(
+          id = "analysis_tabs",
+          tabPanel(
+            "Training Load",
+            card(
+              girafeOutput("load_plot")
+            )                      
+          ),
+          tabPanel(
+            "Load & Readiness",
+            card(
+              plotOutput("load_readiness_plot")
+            )
+          )
         )
       )
     )
@@ -82,22 +94,22 @@ ui <- page_navbar(
         sidebarPanel(
           width = 2,
           conditionalPanel(
-            condition = "input.tabs == 'Barplot'",
+            condition = "input.exp_tabs == 'Barplot'",
             barInputsUI("bar")
           ),
           conditionalPanel(
-            condition = "input.tabs == 'Correlation Plot'",
+            condition = "input.exp_tabs == 'Correlation Plot'",
             corrInputsUI("corr")
           ),
           conditionalPanel(
-            condition = "input.tabs == 'Weekly Mileage'",
+            condition = "input.exp_tabs == 'Weekly Mileage'",
             weeklyInputsUI("weekly")
           )
         ),
         mainPanel(
           # Nested tabsetPanel for barplot and correlation plot
           tabsetPanel(
-            id = "tabs",
+            id = "exp_tabs",
             tabPanel(
               "Weekly Mileage",
               fluidRow(
