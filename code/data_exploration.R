@@ -6,7 +6,7 @@ pacman::p_load(
   ggplot2
 )
 
-activity_dat <- read.csv("data/strava/October_19_2025/activities.csv") |> 
+activity_dat <- read.csv("data/strava/January_29_2026/activities.csv") |> 
   select(where(~ !all(is.na(.))), -Athlete.Weight) |> # Remove all columns that are all missing values
   filter(Activity.Type == "Run",
          Elapsed.Time < 100000,
@@ -59,7 +59,8 @@ saveRDS(activity_dat2, "data/activity_dat2.RDS")
 summary(activity_dat2$Training.Load)
 summary(activity_dat2$Intensity)
 sum(is.na(activity_dat2$Intensity)) / nrow(activity_dat2)
-# Both of the above cols have 334 NA's which is 43%, so either one of them is dependent
+# for the Jan 2026 data refresh, both of the above cols have 357 NA's which is 40% 
+# (as per the october 25 data, it was 43%), so either one of them is dependent
 # on the other or they both started being recorded at the same time
 
 
