@@ -6,7 +6,8 @@ pacman::p_load(
   bslib,
   shiny,
   tidyr,
-  glue
+  glue,
+  ggiraph
 )
 print(getwd())
 source("riegel_calculation.R")
@@ -33,3 +34,5 @@ format_duration <- function(minutes) {
           as.integer(duration@minute), 
           as.integer(duration@.Data))  # Convert to integer explicitly
 }
+
+source("data_derivations.R")
