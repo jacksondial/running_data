@@ -29,8 +29,8 @@ corr_plot <- function(corr_x_var, corr_y_var, group_var){
     theme_bw()+
     theme(panel.grid.minor = element_blank(),
           legend.position = "bottom")+
-    scale_color_brewer(palette = "Paired")+
-    labs(color = "")
+    scale_color_manual(values = running_palette)+
+  labs(color = "")
   
 }
 
