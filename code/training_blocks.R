@@ -5,7 +5,7 @@ build_block_data <- function(hard_effort_threshold = NULL, hard_effort_pct = 0.7
   # Races + metadata
   source("make_race_identifiers.R")
 
-  # Only A-race blocks (marathons)
+  # A-race blocks (marathons)
   races_blocks <- races_final |>
     dplyr::filter(race_priority == "A", !is.na(block_start_date)) |>
     dplyr::arrange(date)
@@ -28,6 +28,30 @@ build_block_data <- function(hard_effort_threshold = NULL, hard_effort_pct = 0.7
     dplyr::mutate(
       is_hard = Relative.Effort >= hard_effort_threshold
     )
+
+  # Helper to convert H:M:S to total minutes
+  time_to_minutes <- function(x) {
+    if (inherits(x, "Period")) {
+      return(lubridate::hour(x) * 60 + lubridate::minute(x) + lubridate::second(x) / 60)
+    }
+    x_chr <- as.character(x)
+    parts <- strsplit(x_chr, ":", fixed = TRUE)
+    sapply(parts, function(p) {
+      if (length(p) < 2) {
+        return(NA_real_)
+      }
+      if (length(p) == 2) {
+        h <- 0
+        m <- as.numeric(p[1])
+        s <- as.numeric(p[2])
+      } else {
+        h <- as.numeric(p[1])
+        m <- as.numeric(p[2])
+        s <- as.numeric(p[3])
+      }
+      if (any(is.na(c(h, m, s)))) NA_real_ else h * 60 + m + s / 60
+    })
+  }
 
   # Daily effort rollup
   daily_effort <- activity_runs |>
@@ -76,9 +100,16 @@ build_block_data <- function(hard_effort_threshold = NULL, hard_effort_pct = 0.7
     activity_block <- activity_runs |>
       dplyr::filter(date >= race$block_start_date, date <= race$date)
 
+    hard_runs <- activity_block |>
+      dplyr::filter(is_hard, !is.na(avg_pace_mile), distance_miles > 0)
+
     weekly_miles <- block_range |>
       dplyr::group_by(week_monday) |>
-      dplyr::summarise(weekly_miles = sum(daily_miles, na.rm = TRUE), .groups = "drop")
+      dplyr::summarise(
+        weekly_miles = sum(daily_miles, na.rm = TRUE),
+        weekly_long_run_miles = max(daily_miles, na.rm = TRUE),
+        .groups = "drop"
+      )
 
     # Tune-up races inside this block (B races)
     tuneups <- races_final |>
@@ -91,20 +122,34 @@ build_block_data <- function(hard_effort_threshold = NULL, hard_effort_pct = 0.7
     total_miles <- sum(block_range$daily_miles, na.rm = TRUE)
     total_run_miles <- sum(activity_block$distance_miles, na.rm = TRUE)
     hard_miles <- sum(activity_block$distance_miles[activity_block$is_hard], na.rm = TRUE)
+    avg_hard_pace_mile <- ifelse(
+      nrow(hard_runs) == 0,
+      NA,
+      stats::weighted.mean(hard_runs$avg_pace_mile, hard_runs$distance_miles, na.rm = TRUE)
+    )
+
+    avg_weekly_long_run_miles <- ifelse(
+      nrow(weekly_miles) == 0,
+      NA,
+      mean(weekly_miles$weekly_long_run_miles, na.rm = TRUE)
+    )
 
     dplyr::tibble(
       race_name = race$name,
       race_date = race$date,
       race_type = race$race_type,
       race_distance_miles = race$distance_miles,
-      race_time_minutes = race$moving_minutes + (race$moving_seconds / 60),
+      race_time_minutes = time_to_minutes(race$moving_total_c),
+      race_pace_min_per_mile = race_time_minutes / race$distance_miles,
       block_start_date = race$block_start_date,
       block_length_weeks = race$block_length_weeks,
       total_miles = total_miles,
       avg_weekly_miles = total_miles / race$block_length_weeks,
       peak_week_miles = ifelse(nrow(weekly_miles) == 0, NA, max(weekly_miles$weekly_miles, na.rm = TRUE)),
       long_run_miles_max = ifelse(nrow(activity_block) == 0, NA, max(activity_block$distance_miles, na.rm = TRUE)),
+      avg_weekly_long_run_miles = avg_weekly_long_run_miles,
       pct_hard_miles = ifelse(total_run_miles == 0, NA, hard_miles / total_run_miles),
+      avg_hard_pace_mile = avg_hard_pace_mile,
       avg_relative_effort = mean(activity_block$Relative.Effort, na.rm = TRUE),
       avg_acute_load = mean(block_range$acute_load, na.rm = TRUE),
       avg_chronic_load = mean(block_range$chronic_load, na.rm = TRUE),

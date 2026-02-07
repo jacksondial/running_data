@@ -52,16 +52,16 @@ races <- data.frame(
 # C: A mostly-for fun race with no larger goal or focused training
 race_meta <- tribble(
   ~name,                                   ~race_priority, ~race_type, ~block_length_weeks,
-  "Ogden Marathon 2024",                   "A",            "Marathon",  20,
+  "Ogden Marathon 2024",                   "A",            "Marathon",  18,
   "Tracksmith Twilight 5000",              "C",            "5K",        NA,
-  "Charles River Marathon 2024",           "A",            "Marathon",  16,
-  "Cambridge Half Marathon",               "C",            "Half",      NA,
+  "Charles River Marathon 2024",           "A",            "Marathon",  13,
+  "Cambridge Half Marathon",               "B",            "Half",      6,
   "Cambridge Spring Classic 5K 2025",      "B",            "5K",        NA,
   "James Joyce Ramble 10K 2025",           "B",            "10K",       NA,
   "Ogden Marathon 2025",                   "A",            "Marathon",  16,
   "Miller Mile",                          "C",            "Mile",       NA,
   "Charles River Marathon Invitational 2025","A",         "Marathon",   12,
-  "Boston Half-Marathon 2025",             "C",            "Half",      6
+  "Boston Half-Marathon 2025",             "B",            "Half",      6
 )
 
 races_final <- races |> 
@@ -69,7 +69,6 @@ races_final <- races |>
   mutate(
     block_start_date = date - (block_length_weeks * 7)
   )
-
 
 
 
