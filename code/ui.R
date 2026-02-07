@@ -174,15 +174,57 @@ ui <- page_navbar(
               h3("Method 2 Output"),
               textOutput("method2_output") # Placeholder for Method 2 output
             )
+          ),
+          tabPanel(
+            "Baseline Model",
+            fluidRow(
+              h3("Baseline Model (A-Race Blocks)"),
+              tableOutput("baseline_model_table"),
+              br(),
+              h4("Leave-One-Out CV Error (minutes)"),
+              textOutput("baseline_model_cv")
+            )
+          )
+        )
+      )
+    )
+  )
+  ,
+  tabPanel(
+    "Marathon Blocks",
+    sidebarLayout(
+      sidebarPanel(
+        width = 2,
+        helpText("A-race training blocks with Relative Effort as the hard-effort signal."),
+        sliderInput(
+          "blocks-hard_effort_pct",
+          "Hard Effort Percentile",
+          min = 0.5,
+          max = 0.95,
+          value = 0.75,
+          step = 0.05
+        )
+      ),
+      mainPanel(
+        tabsetPanel(
+          id = "blocks_tabs",
+          tabPanel(
+            "Block Timeline",
+            fluidRow(
+              plotOutput("block_timeline_plot", height = "500px")
+            )
+          ),
+          tabPanel(
+            "Block Summary",
+            fluidRow(
+              tableOutput("block_summary_table")
+            )
           )
         )
       )
     )
   )
 )
-
-
-
 
 
 
