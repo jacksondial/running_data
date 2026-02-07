@@ -23,7 +23,7 @@ ui <- page_navbar(
   theme = bs_theme(
     version = 5,
     bootswatch = "flatly",
-    primary = "#2C7BE5",
+    primary = "#004E64",#"#2C7BE5",
     success = "#00a65a",
     base_font = font_google("Inter"),
     font_scale = 1.1
