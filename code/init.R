@@ -36,3 +36,4 @@ format_duration <- function(minutes) {
 }
 
 source("data_derivations.R")
+source("training_blocks.R")
