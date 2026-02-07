@@ -15,23 +15,77 @@ dark_theme <- bs_theme(
 )
 
 
-# future step would be to update to use bslib::page_navbar instead of navbarPage
 ui <- page_navbar(
   # theme = "styles.css", # this does not work atm
   # titlePanel("Running Shiny App"),
   # bs_theme_update(theme, font_scale = NULL, preset = "flatly"),
   theme = bs_theme(
     version = 5,
-    bootswatch = "flatly",
-    primary = "#004E64",#"#2C7BE5",
-    success = "#00a65a",
+    bootswatch = "darkly",
+    bg = "#0B0F14",
+    fg = "#E6EEF5",
+    primary = "#00C2FF",
+    secondary = "#1F2A37",
+    success = "#23D18B",
     base_font = font_google("Inter"),
+    heading_font = font_google("Inter"),
     font_scale = 1.1
   ),
   
   # theme = bs_theme(bootswatch = "flatly"),
   tags$head(
     tags$style(HTML("
+      body {
+        background: #0B0F14;
+        color: #E6EEF5;
+      }
+      h1, h2, h3, h4, h5, h6, p, label, .navbar-brand, .nav-link, .form-label {
+        color: #E6EEF5 !important;
+      }
+      .navbar, .navbar-dark {
+        background-color: #0F1720 !important;
+        border-bottom: 1px solid #1F2A37;
+      }
+      .card {
+        background-color: #111827;
+        border: 1px solid #1F2A37;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      }
+      .card-title, .card-text {
+        color: #E6EEF5 !important;
+      }
+      .form-control, .selectize-input, .selectize-dropdown, .form-select {
+        background-color: #0F1720 !important;
+        color: #E6EEF5 !important;
+        border: 1px solid #1F2A37 !important;
+      }
+      .selectize-dropdown-content {
+        background-color: #0F1720;
+      }
+      .value-box {
+        border: 1px solid #1F2A37;
+      }
+      .nav-tabs .nav-link {
+        color: #A9B7C6 !important;
+      }
+      .nav-tabs .nav-link.active {
+        background-color: #111827;
+        border-color: #1F2A37 #1F2A37 #111827;
+        color: #E6EEF5 !important;
+      }
+      .text-muted {
+        color: #9AA4B2 !important;
+      }
+      .table {
+        color: #E6EEF5;
+      }
+      .table thead th {
+        background-color: #0F1720;
+        border-bottom: 1px solid #1F2A37;
+      }
+      .table tbody tr {
+        border-color: #1F2A37;
+      }
       .small-box {
         font-size: 24px;
         background-color: #00a65a !important;
@@ -169,20 +223,35 @@ ui <- page_navbar(
             )
           ),
           tabPanel(
-            "Method 2",
-            fluidRow(
-              h3("Method 2 Output"),
-              textOutput("method2_output") # Placeholder for Method 2 output
-            )
-          ),
-          tabPanel(
             "Baseline Model",
             fluidRow(
               h3("Baseline Model (A-Race Blocks)"),
-              tableOutput("baseline_model_table"),
+              h4("Interpretation"),
+              uiOutput("baseline_model_interpretation"),
               br(),
-              h4("Leave-One-Out CV Error (minutes)"),
-              textOutput("baseline_model_cv")
+              h4("Model Comparison (LOOCV)"),
+              tableOutput("baseline_model_compare"),
+              br(),
+              h4("Model Metrics"),
+              tableOutput("baseline_model_metrics"),
+              br(),
+              h4("Coefficients"),
+              tableOutput("baseline_model_coefs"),
+              br(),
+              h4("Actual vs Predicted"),
+              plotOutput("baseline_model_fit_plot", height = "300px"),
+              br(),
+              h4("Residuals"),
+              plotOutput("baseline_model_resid_plot", height = "300px"),
+              br(),
+              h4("Predictions (Training Fit)"),
+              tableOutput("baseline_model_preds"),
+              br(),
+              h4("Leave-One-Out CV Error (min/mile)"),
+              textOutput("baseline_model_cv"),
+              br(),
+              h4("Leave-One-Out Predictions"),
+              tableOutput("baseline_model_loocv")
             )
           )
         )
@@ -225,7 +294,3 @@ ui <- page_navbar(
     )
   )
 )
-
-
-
-
