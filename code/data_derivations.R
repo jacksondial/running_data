@@ -2,7 +2,7 @@
 ## This code take the data and makes a row for every day that there is no data
 ## available for, ie when I did not run
 #####
-install.packages("zoo")
+# install.packages("zoo")
 daily_dat <- app_dat %>%
   mutate(date = as.Date(date)) %>%
   group_by(date) %>%
