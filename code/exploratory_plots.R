@@ -1,17 +1,6 @@
 # Plotting functions
 # x_var <- "Elapsed.Time"
 
-##### Total Barplot #####
-
-barplot_fun <- function(x_var){
-  ggplot(app_dat, aes(x = !!sym(x_var)))+
-    geom_histogram(aes(fill = running_palette[4]))+
-    theme_bw()+
-    theme(panel.grid.minor = element_blank(),
-          legend.position = "none")+
-    scale_fill_manual(values = running_palette[4])
-}
-
 # corr_x_var <- "Elapsed.Time"
 # corr_y_var <- "Distance"
 # group_var <- "month"
@@ -20,17 +9,22 @@ barplot_fun <- function(x_var){
 ##### Correlation Plot #####
 
 corr_plot <- function(corr_x_var, corr_y_var, group_var){
-  ggplot(app_dat)+
+  corr_dat <- app_dat |>
+    dplyr::filter(Activity.Type == "Run")
+
+  group_values <- corr_dat[[group_var]]
+  n_groups <- dplyr::n_distinct(group_values, na.rm = TRUE)
+
+  ggplot(corr_dat)+
     geom_point(aes(x = !!sym(corr_x_var), 
                    y = !!sym(corr_y_var),
                    color = as.factor(!!sym(group_var))),
                size = 2.5,
                alpha = .6)+
-    theme_bw()+
-    theme(panel.grid.minor = element_blank(),
-          legend.position = "bottom")+
-    scale_color_manual(values = running_palette)+
-  labs(color = "")
+    theme_running_dark() +
+    theme(legend.position = "bottom") +
+    scale_color_manual(values = palette_categorical(n_groups))+
+    labs(color = "")
   
 }
 
@@ -47,8 +41,8 @@ weekly_bar_fun <- function(weekly_plot_type){
   if (weekly_plot_type == "Stacked Bar"){
     ggplot(weekly_dat, aes(x = week_monday, y = weekly_mileage))+
       geom_col(aes(fill = as.factor(year)))+
-      theme_bw()+
-      scale_fill_manual(values = running_palette)+
+      theme_running_dark() +
+      scale_fill_manual(values = palette_categorical(dplyr::n_distinct(weekly_dat$year)))+
       theme(panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank()
       )+
@@ -61,8 +55,8 @@ weekly_bar_fun <- function(weekly_plot_type){
     ggplot(weekly_dat, aes(x = week_monday, y = weekly_mileage))+
       geom_line(aes(color = as.factor(year)))+
       geom_point(aes(color = as.factor(year)))+
-      theme_bw()+
-      scale_color_manual(values = running_palette)+
+      theme_running_dark() +
+      scale_color_manual(values = palette_categorical(dplyr::n_distinct(weekly_dat$year)))+
       theme(panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank()
       )+
@@ -73,6 +67,5 @@ weekly_bar_fun <- function(weekly_plot_type){
   }
   
 }
-
 
 
