@@ -18,12 +18,6 @@ server <- function(input, output, session){
     load_readiness_fun()
   })
   
-  output$barplot <- renderPlot({
-    barplot_fun(
-      input$`bar-x_var`
-      )
-  })
-
   output$weekly_bar <- renderPlot({
     weekly_bar_fun(
       input$`weekly-weekly_plot_type`
@@ -48,7 +42,50 @@ server <- function(input, output, session){
     )
   })
 
-  output$riegel_output <- renderText(paste0("Your predicted time is: ", riegel_calculation(), ", over a distance of ", input$`riegel-d2`))
+  riegel_minutes <- reactive({
+    req(input$`riegel-t1`, input$`riegel-d1`, input$`riegel-d2`)
+    riegel_predict_minutes(
+      t1 = input$`riegel-t1`,
+      d1 = input$`riegel-d1`,
+      d2 = input$`riegel-d2`
+    )
+  })
+
+  output$riegel_output <- renderText({
+    paste0("Predicted using ", input$`riegel-d1`, " benchmark over ", input$`riegel-d2`, ".")
+  })
+
+  output$riegel_pred_time <- renderText({
+    format_duration_compact(riegel_minutes())
+  })
+
+  output$riegel_pred_pace <- renderText({
+    goal_miles <- distance_to_miles(input$`riegel-d2`)
+    pace_min <- riegel_minutes() / goal_miles
+    paste0(format_duration_compact(pace_min), " /mi")
+  })
+
+  output$riegel_distance_ratio <- renderText({
+    bench_miles <- distance_to_miles(input$`riegel-d1`)
+    goal_miles <- distance_to_miles(input$`riegel-d2`)
+    paste0(round(goal_miles / bench_miles, 2), "x")
+  })
+
+  output$riegel_details <- renderUI({
+    bench_miles <- distance_to_miles(input$`riegel-d1`)
+    goal_miles <- distance_to_miles(input$`riegel-d2`)
+    predicted_minutes <- riegel_minutes()
+
+    tags$div(
+      tags$p(paste0("Benchmark: ", input$`riegel-t1`, " minutes over ", input$`riegel-d1`, " (", round(bench_miles, 1), " mi).")),
+      tags$p(paste0("Goal: ", input$`riegel-d2`, " (", round(goal_miles, 1), " mi).")),
+      tags$p(paste0("Formula: T2 = T1 * (D2 / D1)^1.06.")),
+      tags$p(paste0(
+        "Applied: ", round(predicted_minutes, 2),
+        " minutes (", format_duration(predicted_minutes), ")."
+      ))
+    )
+  })
 
   output$block_timeline_plot <- renderPlot({
     block_weekly <- block_data()$block_weekly
@@ -65,8 +102,8 @@ server <- function(input, output, session){
         y = "Weekly Miles",
         color = "Race"
       ) +
-      scale_color_manual(values = running_palette)+
-      theme_minimal()+
+      scale_color_manual(values = palette_categorical(dplyr::n_distinct(block_weekly$race_name))) +
+      theme_running_dark() +
       theme(panel.grid.minor = element_blank())
   })
 
@@ -328,11 +365,11 @@ server <- function(input, output, session){
       race_name = model_data$race_name
     )
     ggplot(plot_df, aes(x = actual, y = predicted, label = race_name)) +
-      geom_point(size = 3, color = "#004E64") +
-      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray50") +
+      geom_point(size = 3, color = "#00C2FF") +
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "#A9B7C6") +
       geom_text(vjust = -0.8, size = 3) +
       labs(x = "Actual Time (minutes)", y = "Predicted Time (minutes)") +
-      theme_minimal()
+      theme_running_dark()
   })
 
   output$baseline_model_resid_plot <- renderPlot({
@@ -349,10 +386,10 @@ server <- function(input, output, session){
       race_name = model_data$race_name
     )
     ggplot(plot_df, aes(x = predicted, y = residual, label = race_name)) +
-      geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
-      geom_point(size = 3, color = "#1B998B") +
+      geom_hline(yintercept = 0, linetype = "dashed", color = "#A9B7C6") +
+      geom_point(size = 3, color = "#23D18B") +
       geom_text(vjust = -0.8, size = 3) +
       labs(x = "Predicted Time (minutes)", y = "Residual (minutes)") +
-      theme_minimal()
+      theme_running_dark()
   })
 }

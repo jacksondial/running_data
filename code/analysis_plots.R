@@ -79,15 +79,14 @@ load_plot_fun <- function(time_window) {
       color = "Load",
       title = "Training Load Over Time"
     ) +
-
-    scale_color_manual(values = running_palette) +
-    theme_minimal()+
-  theme(legend.position = "bottom")
+    scale_color_manual(values = c("Acute (7d)" = "#00C2FF", "Chronic (28d)" = "#23D18B")) +
+    theme_running_dark() +
+    theme(legend.position = "bottom")
   
   girafe(
     ggobj = p,
-    width_svg = 10,
-    height_svg = 5,
+    width_svg = 12,
+    height_svg = 6.6,
     options = list(
       opts_hover(css = "stroke-width:3;opacity:1;"),
       opts_hover_inv(css = "opacity:0.15;"),
@@ -117,9 +116,9 @@ load_plot_fun <- function(time_window) {
 # the function in case things change
 ratio_plot_fun <- function() {
   ggplot(daily_dat, aes(x = date, y = load_ratio)) +
-    geom_line() +
-    geom_hline(yintercept = c(0.8, 1.3, 1.5), linetype = "dashed", alpha = 0.5) +
-    theme_bw() +
+    geom_line(color = "#5FA8D3", linewidth = 0.9) +
+    geom_hline(yintercept = c(0.8, 1.3, 1.5), linetype = "dashed", alpha = 0.5, color = "#A9B7C6") +
+    theme_running_dark() +
     labs(
       title = "Acute : Chronic Load Ratio",
       y = "Load Ratio",
@@ -174,14 +173,12 @@ load_readiness_fun <- function() {
   ) +
     geom_point(alpha = 0.4) +
     geom_smooth(method = "gam", se = FALSE) +
-    theme_bw() +
+    theme_running_dark() +
     labs(
       title = "Training Load vs Readiness",
       x = "Acute Load",
       y = "Readiness Score",
       color = "Year"
     )+
-    scale_color_manual(values = running_palette)
+    scale_color_manual(values = palette_categorical(dplyr::n_distinct(daily_dat$year)))
 }
-
-

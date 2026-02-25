@@ -1,66 +1,109 @@
 # Makes landing page objects
 source("init.R")
-# total_miles_vb <-  shinydashboard::valueBox(
-#   value = sum(app_dat$Distance),
-#   subtitle = "Total Miles Ran",
-#   icon = icon("running"),
-#   width = 4,
-#   
-# )
+current_year <- lubridate::year(Sys.Date())
+last_year <- current_year - 1
 
-total_miles_vb <- bslib::value_box(
-  title = "Lifetime Miles Ran",
-  value = round(sum(app_dat$distance_miles),2),
-  showcase = icon("running"), # Customize icon style
-  theme = value_box_theme(bg = running_palette[1], fg = running_palette[2]), # Sets a green theme color
+run_activities <- app_dat |>
+  dplyr::filter(Activity.Type == "Run")
+
+year_run_data <- function(year_value) {
+  run_activities |>
+    dplyr::filter(year == as.character(year_value))
+}
+
+year_miles <- function(year_value) {
+  year_run_data(year_value) |>
+    dplyr::summarise(value = sum(distance_miles, na.rm = TRUE)) |>
+    dplyr::pull(value) |>
+    round(2)
+}
+
+fmt_stat <- function(x, digits = 1) {
+  format(round(x, digits), nsmall = digits, big.mark = ",", scientific = FALSE, trim = TRUE)
+}
+
+latest <- daily_dat |>
+  dplyr::filter(date == max(date))
+
+this_year_weekly_avg <- year_run_data(current_year) |>
+  dplyr::group_by(week_monday) |>
+  dplyr::summarise(weekly_miles = sum(distance_miles, na.rm = TRUE), .groups = "drop") |>
+  dplyr::summarise(value = mean(weekly_miles, na.rm = TRUE)) |>
+  dplyr::pull(value)
+this_year_weekly_avg <- ifelse(is.na(this_year_weekly_avg), 0, this_year_weekly_avg)
+
+this_year_runs <- nrow(year_run_data(current_year))
+this_year_longest <- year_run_data(current_year) |>
+  dplyr::summarise(value = max(distance_miles, na.rm = TRUE)) |>
+  dplyr::pull(value)
+this_year_longest <- ifelse(is.infinite(this_year_longest), 0, this_year_longest)
+
+lifetime_miles_vb <- bslib::value_box(
+  title = "Lifetime Miles",
+  value = fmt_stat(sum(run_activities$distance_miles, na.rm = TRUE)),
+  showcase = icon("road"),
+  theme = value_box_theme(bg = "#0F1720", fg = "#4FD1C5"),
+  class = "lp-stat-card",
   fill = TRUE,
-  height = 200L
+  height = 175L
 )
-miles_25_vb <- bslib::value_box(
-  title = "Miles Ran in 2025",
-  value = app_dat |> filter(year == "2025", Activity.Type == "Run") |> summarize(total_distance = round(sum(distance_miles), 2)) |> pull(total_distance),
+
+miles_this_year_vb <- bslib::value_box(
+  title = paste0(current_year, " Miles"),
+  value = fmt_stat(year_miles(current_year)),
   showcase = icon("person-running"),
-  theme = value_box_theme(bg = running_palette[1], fg = running_palette[4]),
-  fill = TRUE, 
-  height = 200L
+  theme = value_box_theme(bg = "#0F1720", fg = "#F9C846"),
+  class = "lp-stat-card",
+  fill = TRUE,
+  height = 175L
 )
 
-miles_24_vb <- bslib::value_box(
-  title = "Miles Ran in 2024",
-  value = app_dat |> filter(year == "2024", Activity.Type == "Run") |> summarize(total_distance = round(sum(distance_miles), 2)) |> pull(total_distance),
-  showcase = icon("person-running"),
-  theme = value_box_theme(bg = running_palette[1], fg = running_palette[5]),
-  fill = TRUE, 
-  height = 200L
+miles_last_year_vb <- bslib::value_box(
+  title = paste0(last_year, " Miles"),
+  value = fmt_stat(year_miles(last_year)),
+  showcase = icon("calendar-days"),
+  theme = value_box_theme(bg = "#0F1720", fg = "#5FA8D3"),
+  class = "lp-stat-card",
+  fill = TRUE,
+  height = 175L
 )
 
-# "#002147" "#A87C55" "#FFD700" "#8B1D1D" "#004E64" "#F4EDE4" "#3E2C1C" "#D4AF37" "#3B5A52" "#C65353"
+runs_this_year_vb <- bslib::value_box(
+  title = paste0(current_year, " Run Count"),
+  value = this_year_runs,
+  showcase = icon("shoe-prints"),
+  theme = value_box_theme(bg = "#0F1720", fg = "#A3E635"),
+  class = "lp-stat-card",
+  fill = TRUE,
+  height = 175L
+)
 
-# miles_24_vb <- shinydashboard::valueBox(
-#   value = app_dat |> filter(year == "2024") |> summarize(total_distance = sum(Distance)) |> dplyr::pull(total_distance),
-#   subtitle = "Miles Ran in 2024",
-#   icon = icon("running"),
-#   width = 4
-# )
+avg_weekly_this_year_vb <- bslib::value_box(
+  title = paste0(current_year, " Avg Weekly Miles"),
+  value = fmt_stat(this_year_weekly_avg),
+  showcase = icon("chart-line"),
+  theme = value_box_theme(bg = "#0F1720", fg = "#F97316"),
+  class = "lp-stat-card",
+  fill = TRUE,
+  height = 175L
+)
 
-latest <- daily_dat |> filter(date == max(date))
+longest_run_this_year_vb <- bslib::value_box(
+  title = paste0("Longest Run in ", current_year),
+  value = paste0(fmt_stat(this_year_longest), " mi"),
+  showcase = icon("mountain"),
+  theme = value_box_theme(bg = "#0F1720", fg = "#C084FC"),
+  class = "lp-stat-card",
+  fill = TRUE,
+  height = 175L
+)
 
 readiness_box <- bslib::value_box(
-  title = "Readiness",
+  title = "Current Readiness Signal",
   value = latest$insight,
   showcase = icon("heartbeat"),
-  theme = value_box_theme(bg = running_palette[1], fg = running_palette[6]),
+  theme = value_box_theme(bg = "#0F1720", fg = "#F43F5E"),
+  class = "lp-stat-card lp-stat-card--readiness",
   fill = TRUE,
-  height = 200L
+  height = 175L
 )
-
-# readiness_box <- renderUI({
-#   valueBox(
-#     value = round(latest$readiness, 2),
-#     subtitle = latest$insight,
-#     icon = icon("heartbeat"),
-#     color = ifelse(latest$readiness > 1, "green", "orange")
-#   )
-# })
-
-

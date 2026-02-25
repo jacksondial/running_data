@@ -37,3 +37,28 @@ format_duration <- function(minutes) {
 
 source("data_derivations.R")
 source("training_blocks.R")
+
+theme_running_dark <- function(base_size = 13) {
+  ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "#0F1720", color = NA),
+      panel.background = ggplot2::element_rect(fill = "#0F1720", color = NA),
+      panel.grid.major = ggplot2::element_line(color = "#223247", linewidth = 0.4),
+      panel.grid.minor = ggplot2::element_blank(),
+      axis.text = ggplot2::element_text(color = "#C8D3DF"),
+      axis.title = ggplot2::element_text(color = "#E6EEF5"),
+      plot.title = ggplot2::element_text(color = "#E6EEF5", face = "bold"),
+      plot.subtitle = ggplot2::element_text(color = "#A9B7C6"),
+      legend.background = ggplot2::element_rect(fill = "#0F1720", color = NA),
+      legend.key = ggplot2::element_rect(fill = "#0F1720", color = NA),
+      legend.title = ggplot2::element_text(color = "#E6EEF5"),
+      legend.text = ggplot2::element_text(color = "#C8D3DF")
+    )
+}
+
+palette_categorical <- function(n) {
+  if (n <= 0) {
+    return(character(0))
+  }
+  grDevices::hcl.colors(n, palette = "viridis")
+}
