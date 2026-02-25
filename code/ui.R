@@ -65,6 +65,98 @@ ui <- page_navbar(
       .value-box {
         border: 1px solid #1F2A37;
       }
+      .lp-hero {
+        background: linear-gradient(130deg, #0F1720 0%, #111827 55%, #102030 100%);
+        border: 1px solid #1F2A37;
+        border-radius: 16px;
+        padding: 24px 28px;
+        margin-bottom: 18px;
+      }
+      .lp-hero h2 {
+        margin-bottom: 6px;
+        font-weight: 700;
+      }
+      .lp-hero p {
+        color: #A9B7C6 !important;
+        margin-bottom: 0;
+      }
+      .lp-grid {
+        margin-top: 8px;
+      }
+      .lp-stat-card {
+        border: 1px solid #253447 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+      }
+      .lp-stat-card .value-box-title {
+        font-size: 0.9rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .lp-stat-card .value-box-value {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+      .lp-stat-card--readiness .value-box-value {
+        font-size: 1.45rem;
+      }
+      .analysis-plot-card {
+        min-height: 700px;
+      }
+      .riegel-shell {
+        padding: 10px 8px;
+      }
+      .riegel-hero {
+        background: linear-gradient(130deg, #0F1720 0%, #101D2B 45%, #122334 100%);
+        border: 1px solid #1F2A37;
+        border-radius: 16px;
+        padding: 22px 26px;
+        margin-bottom: 16px;
+      }
+      .riegel-hero h3 {
+        margin-bottom: 6px;
+        font-weight: 700;
+      }
+      .riegel-hero p {
+        margin-bottom: 0;
+        color: #A9B7C6 !important;
+      }
+      .riegel-metric-card {
+        background-color: #0F1720 !important;
+        border: 1px solid #1F2A37 !important;
+        border-radius: 14px !important;
+        min-height: 150px;
+      }
+      .riegel-metric-label {
+        color: #9DB0C4 !important;
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .riegel-metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #E6EEF5;
+      }
+      .riegel-metric-sub {
+        color: #9AA4B2 !important;
+        margin-top: 8px;
+      }
+      .riegel-details {
+        background-color: #0F1720;
+        border: 1px solid #1F2A37;
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-top: 14px;
+      }
+      .riegel-details h5 {
+        margin-bottom: 12px;
+      }
+      .riegel-details p {
+        color: #C8D3DF !important;
+        margin-bottom: 6px;
+      }
       .nav-tabs .nav-link {
         color: #A9B7C6 !important;
       }
@@ -115,13 +207,23 @@ ui <- page_navbar(
       "Landing Page",
       value = "landing_page",
       card(
-      fluidRow(
-        column(total_miles_vb, width = 4),
-        column(miles_25_vb, width = 4),
-        column(miles_24_vb, width = 4)
+        div(
+          class = "lp-hero",
+          h2("Running Snapshot"),
+          p("Quick look at training progression, annual volume, and current readiness.")
         ),
-      fluidRow(),
-      fluidRow(readiness_box, width = 4)
+        layout_column_wrap(
+          class = "lp-grid",
+          width = 1 / 3,
+          gap = "1rem",
+          lifetime_miles_vb,
+          miles_this_year_vb,
+          miles_last_year_vb,
+          runs_this_year_vb,
+          avg_weekly_this_year_vb,
+          longest_run_this_year_vb,
+          readiness_box
+        )
       )
     ),
   tabPanel(
@@ -140,13 +242,15 @@ ui <- page_navbar(
           tabPanel(
             "Training Load",
             card(
-              girafeOutput("load_plot")
+              class = "analysis-plot-card",
+              girafeOutput("load_plot", width = "100%", height = "620px")
             )                      
           ),
           tabPanel(
             "Load & Readiness",
             card(
-              plotOutput("load_readiness_plot")
+              class = "analysis-plot-card",
+              plotOutput("load_readiness_plot", height = "620px")
             )
           )
         )
@@ -158,10 +262,6 @@ ui <- page_navbar(
       sidebarLayout(
         sidebarPanel(
           width = 2,
-          conditionalPanel(
-            condition = "input.exp_tabs == 'Barplot'",
-            barInputsUI("bar")
-          ),
           conditionalPanel(
             condition = "input.exp_tabs == 'Correlation Plot'",
             corrInputsUI("corr")
@@ -177,20 +277,20 @@ ui <- page_navbar(
             id = "exp_tabs",
             tabPanel(
               "Weekly Mileage",
-              fluidRow(
-                plotOutput("weekly_bar")
-              )
-            ),
-            tabPanel(
-              "Barplot",
-              fluidRow(
-                plotOutput("barplot")
+              card(
+                class = "analysis-plot-card",
+                fluidRow(
+                  plotOutput("weekly_bar", height = "620px")
+                )
               )
             ),
             tabPanel(
               "Correlation Plot",
-              fluidRow(
-                plotOutput("corr_plot")
+              card(
+                class = "analysis-plot-card",
+                fluidRow(
+                  plotOutput("corr_plot", height = "620px")
+                )
               )
             )
           )
@@ -217,9 +317,40 @@ ui <- page_navbar(
           id = "prediction_tabs", # Add an ID for the tabsetPanel
           tabPanel(
             "Riegel Method",
-            fluidRow(
-              # h3("Riegel Method Output"),
-              textOutput("riegel_output") # Placeholder for Riegel method output
+            div(
+              class = "riegel-shell",
+              div(
+                class = "riegel-hero",
+                h3("Riegel Race Time Predictor"),
+                p("Estimate finish times across race distances using your current benchmark performance.")
+              ),
+              layout_column_wrap(
+                width = 1 / 3,
+                gap = "1rem",
+                card(
+                  class = "riegel-metric-card",
+                  div(class = "riegel-metric-label", "Predicted Finish"),
+                  div(class = "riegel-metric-value", textOutput("riegel_pred_time")),
+                  div(class = "riegel-metric-sub", textOutput("riegel_output"))
+                ),
+                card(
+                  class = "riegel-metric-card",
+                  div(class = "riegel-metric-label", "Estimated Pace"),
+                  div(class = "riegel-metric-value", textOutput("riegel_pred_pace")),
+                  div(class = "riegel-metric-sub", "Projected average pace at selected goal distance.")
+                ),
+                card(
+                  class = "riegel-metric-card",
+                  div(class = "riegel-metric-label", "Distance Multiplier"),
+                  div(class = "riegel-metric-value", textOutput("riegel_distance_ratio")),
+                  div(class = "riegel-metric-sub", "How much farther your goal event is vs. your benchmark.")
+                )
+              ),
+              div(
+                class = "riegel-details",
+                h5("Calculation Details"),
+                uiOutput("riegel_details")
+              )
             )
           ),
           tabPanel(
