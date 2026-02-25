@@ -16,6 +16,10 @@ daily_dat <- app_dat %>%
            fill = list(daily_miles = 0, daily_time = 0, daily_runs = 0)
            ) |> 
   arrange(date) %>%
+  mutate(
+    week_monday = lubridate::floor_date(date, unit = "week", week_start = 1),
+    year_monday = lubridate::year(week_monday)
+  ) %>%
   ### Add load metrtics
   mutate(
     acute_load   = zoo::rollmean(daily_miles, 7, fill = NA, align = "right"),
@@ -61,5 +65,4 @@ daily_dat <- app_dat %>%
 #     select(date, daily_miles, acute_load, chronic_load, readiness, insight) %>%
 #     head(14)
 # })
-
 
