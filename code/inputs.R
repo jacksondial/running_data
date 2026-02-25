@@ -20,51 +20,52 @@ loadInputsUI <- function(id){
 }
 
 
-
-
-
-barInputsUI <- function(id){
-  ns <- NS(id)
-  tagList(
-    selectInput(
-      ns("x_var"),
-      "Choose X-Variable:",
-      selected = "Elapsed.Time",
-      choices = c(
-        "Elapsed.Time",
-        "distance_miles",
-        "Max.Heart.Rate",
-        "Relative.Effort",
-        "Calories"
-      )
-    )
-  )
-}
-
 corrInputsUI <- function(id){
   ns <- NS(id)
   tagList(
     selectInput(
       ns("x_var"),
       "X-Variable",
-      selected = "Elapsed.Time",
+      selected = "distance_miles",
       choices = c(
-        "Elapsed.Time",
         "distance_miles",
+        "elapsed_minutes",
+        "moving_minutes",
+        "avg_speed_mph",
+        "avg_pace_mile",
+        "Average.Speed",
+        "Max.Speed",
+        "Elevation.Gain",
+        "Elevation.Loss",
+        "Average.Heart.Rate",
         "Max.Heart.Rate",
         "Relative.Effort",
+        "Training.Load",
+        "Average.Watts",
+        "Weighted.Average.Power",
         "Calories"
       )
     ),
     selectInput(
       ns("y_var"),
       "Y-Variable",
-      selected = "Distance",
+      selected = "elapsed_minutes",
       choices = c(
-        "Elapsed.Time",
         "distance_miles",
+        "elapsed_minutes",
+        "moving_minutes",
+        "avg_speed_mph",
+        "avg_pace_mile",
+        "Average.Speed",
+        "Max.Speed",
+        "Elevation.Gain",
+        "Elevation.Loss",
+        "Average.Heart.Rate",
         "Max.Heart.Rate",
         "Relative.Effort",
+        "Training.Load",
+        "Average.Watts",
+        "Weighted.Average.Power",
         "Calories"
       )
     ),
@@ -73,7 +74,6 @@ corrInputsUI <- function(id){
       "Grouping Variable",
       selected = "month",
       choices = c(
-        "day",
         "month",
         "year"
       )
@@ -91,8 +91,7 @@ weeklyInputsUI <- function(id){
       selected = "Stacked Bar",
       choices = c(
         "Stacked Bar",
-        "Line",
-        "Other?"
+        "Line"
       )
     )
   )
@@ -104,7 +103,7 @@ riegelInputsUI <- function(id){
   tagList(
     numericInput(
       ns("t1"),
-      "Time 1 (Minutes)",
+      "Completed Time (minutes)",
       5
     ),
     selectizeInput(
@@ -115,14 +114,11 @@ riegelInputsUI <- function(id){
     selectizeInput(
       ns("d2"),
       "Goal Distance",
-      choice = c("1 Mile", "5K", "10K", "Half-Marathon", "Marathon")
+      choices = c("1 Mile", "5K", "10K", "Half-Marathon", "Marathon")
     )
   )
 }
   
-
-
-
 
 
 
