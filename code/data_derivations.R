@@ -43,11 +43,11 @@ daily_dat <- app_dat %>%
   ) |> 
   ### Readiness
   mutate(
-    readiness = scale(chronic_load) -
-      scale(load_ratio) +
+    readiness = as.numeric(scale(chronic_load)) -
+      as.numeric(scale(load_ratio)) +
       # The reason we negate monotony is to flip the direction, and indicate that
       # high monotony is bad according to Foster research
-      scale(-monotony),
+      as.numeric(scale(-monotony)),
     insight = case_when(
       load_ratio > 1.5 ~ "High ramp risk",
       chronic_load > quantile(chronic_load, .9, na.rm=TRUE) ~ "Peak training load",
@@ -65,4 +65,3 @@ daily_dat <- app_dat %>%
 #     select(date, daily_miles, acute_load, chronic_load, readiness, insight) %>%
 #     head(14)
 # })
-

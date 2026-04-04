@@ -211,6 +211,23 @@ server <- function(input, output, session){
     stats::lm(model_choice$formula, data = model_data)
   })
 
+  output$baseline_model_inputs <- renderTable({
+    model_data <- baseline_model_data()
+    if (nrow(model_data) == 0) {
+      return(data.frame(Message = "No complete A-race blocks available yet."))
+    }
+
+    model_data |>
+      dplyr::transmute(
+        race_name,
+        race_date = format_date(race_date),
+        race_time_minutes = round(race_time_minutes, 1),
+        avg_weekly_miles = round(avg_weekly_miles, 1),
+        avg_relative_effort = round(avg_relative_effort, 1),
+        avg_weekly_long_run_miles = round(avg_weekly_long_run_miles, 1)
+      )
+  })
+
   output$baseline_model_compare <- renderTable({
     baseline_model_choice()$table
   })
@@ -220,12 +237,15 @@ server <- function(input, output, session){
     if (is.null(fit)) {
       return(data.frame(Message = "Not enough A-race blocks for baseline model."))
     }
+    model_choice <- baseline_model_choice()
     preds <- stats::predict(fit, newdata = model_data)
     rmse <- sqrt(mean((model_data$race_time_minutes - preds)^2))
     mae <- mean(abs(model_data$race_time_minutes - preds))
     r2 <- summary(fit)$r.squared
 
     data.frame(
+      Selected_Model = model_choice$best_model,
+      Blocks_Used = nrow(model_data),
       RMSE_Minutes = round(rmse, 2),
       MAE_Minutes = round(mae, 2),
       R2 = round(r2, 3)
@@ -326,28 +346,32 @@ server <- function(input, output, session){
     model_choice <- baseline_model_choice()
     model_name <- if (is.null(model_choice$best_model)) "Selected Model" else model_choice$best_model
     sign_note <- if (!isTRUE(model_choice$sign_filtered)) {
-      "Note: No model met the expected negative sign for volume/long run. Coefficient signs may be unstable with 4 races."
+      "No candidate model preserved the expected negative volume/long-run sign, so the chosen formula is strictly the best error fit."
     } else {
       NULL
     }
 
     tags$div(
-      tags$p(paste0("Interpretation uses the selected model (", model_name, "). Effects are associations, not causal.")),
+      tags$p(paste0("Selected baseline: ", model_name, ".")),
+      tags$p("Treat these effects as directional signals from a small sample, not causal estimates."),
       if (!is.null(sign_note)) tags$p(sign_note),
       if (!is.na(weekly_sec)) tags$p(paste0(
-        "Volume effect: ", round(weekly_effect, 4), " min per mile/week. ",
-        "Calculation: ", round(weekly_effect, 4), " * 10 * 60 = ",
-        weekly_sec, " seconds for +10 miles/week."
+        "+10 average weekly miles is associated with ",
+        abs(weekly_sec), " seconds ",
+        ifelse(weekly_sec <= 0, "faster", "slower"),
+        " race time."
       )),
       if (!is.na(effort_sec)) tags$p(paste0(
-        "Relative Effort effect: ", round(effort_effect, 4), " min per point. ",
-        "Calculation: ", round(effort_effect, 4), " * 60 = ",
-        effort_sec, " seconds per +1 avg Relative Effort."
+        "+1 point of average Relative Effort is associated with ",
+        abs(effort_sec), " seconds ",
+        ifelse(effort_sec <= 0, "faster", "slower"),
+        " race time."
       )),
       if (!is.na(long_run_sec)) tags$p(paste0(
-        "Avg weekly long run effect: ", round(long_run_effect, 4), " min per mile. ",
-        "Calculation: ", round(long_run_effect, 4), " * 60 = ",
-        long_run_sec, " seconds per +1 mile."
+        "+1 mile in average weekly long run is associated with ",
+        abs(long_run_sec), " seconds ",
+        ifelse(long_run_sec <= 0, "faster", "slower"),
+        " race time."
       ))
     )
   })
