@@ -22,10 +22,10 @@ ui <- page_navbar(
   theme = bs_theme(
     version = 5,
     bootswatch = "darkly",
-    bg = "#0B0F14",
+    bg = "#1E242C",
     fg = "#E6EEF5",
     primary = "#00C2FF",
-    secondary = "#1F2A37",
+    secondary = "#2A313B",
     success = "#23D18B",
     base_font = font_google("Inter"),
     heading_font = font_google("Inter"),
@@ -36,38 +36,38 @@ ui <- page_navbar(
   tags$head(
     tags$style(HTML("
       body {
-        background: #0B0F14;
+        background: #1E242C;
         color: #E6EEF5;
       }
       h1, h2, h3, h4, h5, h6, p, label, .navbar-brand, .nav-link, .form-label {
         color: #E6EEF5 !important;
       }
       .navbar, .navbar-dark {
-        background-color: #0F1720 !important;
-        border-bottom: 1px solid #1F2A37;
+        background-color: #262D36 !important;
+        border-bottom: 1px solid #3A434F;
       }
       .card {
-        background-color: #111827;
-        border: 1px solid #1F2A37;
+        background-color: #252C35;
+        border: 1px solid #3A434F;
         box-shadow: 0 10px 30px rgba(0,0,0,0.25);
       }
       .card-title, .card-text {
         color: #E6EEF5 !important;
       }
       .form-control, .selectize-input, .selectize-dropdown, .form-select {
-        background-color: #0F1720 !important;
+        background-color: #222831 !important;
         color: #E6EEF5 !important;
-        border: 1px solid #1F2A37 !important;
+        border: 1px solid #3A434F !important;
       }
       .selectize-dropdown-content {
-        background-color: #0F1720;
+        background-color: #222831;
       }
       .value-box {
-        border: 1px solid #1F2A37;
+        border: 1px solid #3A434F;
       }
       .lp-hero {
-        background: linear-gradient(130deg, #0F1720 0%, #111827 55%, #102030 100%);
-        border: 1px solid #1F2A37;
+        background: linear-gradient(130deg, #252C35 0%, #2A313B 55%, #313946 100%);
+        border: 1px solid #3A434F;
         border-radius: 16px;
         padding: 24px 28px;
         margin-bottom: 18px;
@@ -84,7 +84,7 @@ ui <- page_navbar(
         margin-top: 8px;
       }
       .lp-stat-card {
-        border: 1px solid #253447 !important;
+        border: 1px solid #434D5A !important;
         border-radius: 14px !important;
         box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
       }
@@ -107,8 +107,8 @@ ui <- page_navbar(
         padding: 10px 8px;
       }
       .riegel-hero {
-        background: linear-gradient(130deg, #0F1720 0%, #101D2B 45%, #122334 100%);
-        border: 1px solid #1F2A37;
+        background: linear-gradient(130deg, #252C35 0%, #29313B 45%, #313A45 100%);
+        border: 1px solid #3A434F;
         border-radius: 16px;
         padding: 22px 26px;
         margin-bottom: 16px;
@@ -122,8 +122,8 @@ ui <- page_navbar(
         color: #A9B7C6 !important;
       }
       .riegel-metric-card {
-        background-color: #0F1720 !important;
-        border: 1px solid #1F2A37 !important;
+        background-color: #222831 !important;
+        border: 1px solid #3A434F !important;
         border-radius: 14px !important;
         min-height: 150px;
       }
@@ -144,11 +144,25 @@ ui <- page_navbar(
         margin-top: 8px;
       }
       .riegel-details {
-        background-color: #0F1720;
-        border: 1px solid #1F2A37;
+        background-color: #222831;
+        border: 1px solid #3A434F;
         border-radius: 14px;
         padding: 18px 20px;
         margin-top: 14px;
+      }
+      .baseline-step {
+        background-color: #252C35;
+        border: 1px solid #3A434F;
+        border-radius: 16px;
+        padding: 18px 20px;
+        margin-bottom: 16px;
+      }
+      .baseline-step h4 {
+        margin-bottom: 6px;
+      }
+      .baseline-step p {
+        color: #A9B7C6 !important;
+        margin-bottom: 14px;
       }
       .riegel-details h5 {
         margin-bottom: 12px;
@@ -161,8 +175,8 @@ ui <- page_navbar(
         color: #A9B7C6 !important;
       }
       .nav-tabs .nav-link.active {
-        background-color: #111827;
-        border-color: #1F2A37 #1F2A37 #111827;
+        background-color: #252C35;
+        border-color: #3A434F #3A434F #252C35;
         color: #E6EEF5 !important;
       }
       .text-muted {
@@ -172,11 +186,11 @@ ui <- page_navbar(
         color: #E6EEF5;
       }
       .table thead th {
-        background-color: #0F1720;
-        border-bottom: 1px solid #1F2A37;
+        background-color: #222831;
+        border-bottom: 1px solid #3A434F;
       }
       .table tbody tr {
-        border-color: #1F2A37;
+        border-color: #3A434F;
       }
       .small-box {
         font-size: 24px;
@@ -219,7 +233,6 @@ ui <- page_navbar(
           lifetime_miles_vb,
           miles_this_year_vb,
           miles_last_year_vb,
-          runs_this_year_vb,
           avg_weekly_this_year_vb,
           longest_run_this_year_vb,
           readiness_box
@@ -357,32 +370,32 @@ ui <- page_navbar(
             "Baseline Model",
             fluidRow(
               h3("Baseline Model (A-Race Blocks)"),
-              h4("Interpretation"),
-              uiOutput("baseline_model_interpretation"),
-              br(),
-              h4("Model Comparison (LOOCV)"),
-              tableOutput("baseline_model_compare"),
-              br(),
-              h4("Model Metrics"),
-              tableOutput("baseline_model_metrics"),
-              br(),
-              h4("Coefficients"),
-              tableOutput("baseline_model_coefs"),
-              br(),
-              h4("Actual vs Predicted"),
-              plotOutput("baseline_model_fit_plot", height = "300px"),
-              br(),
-              h4("Residuals"),
-              plotOutput("baseline_model_resid_plot", height = "300px"),
-              br(),
-              h4("Predictions (Training Fit)"),
-              tableOutput("baseline_model_preds"),
-              br(),
-              h4("Leave-One-Out CV Error (min/mile)"),
-              textOutput("baseline_model_cv"),
-              br(),
-              h4("Leave-One-Out Predictions"),
-              tableOutput("baseline_model_loocv")
+              div(
+                class = "baseline-step",
+                h4("1. Start With Completed A-Race Blocks"),
+                p("Each row is one finished block and the race result it produced. These are the observations available to the baseline model."),
+                tableOutput("baseline_model_inputs")
+              ),
+              div(
+                class = "baseline-step",
+                h4("2. Compare Simple Candidate Models"),
+                p("Test a few small formulas first, then keep the one with the best leave-one-out error profile."),
+                tableOutput("baseline_model_compare")
+              ),
+              div(
+                class = "baseline-step",
+                h4("3. Fit The Best Baseline Model"),
+                p("Summarize the selected model, the main directional takeaways, and the overall fit on the available A-race blocks."),
+                uiOutput("baseline_model_interpretation"),
+                tableOutput("baseline_model_metrics")
+              ),
+              div(
+                class = "baseline-step",
+                h4("4. Check Race-Level Performance"),
+                p("A final sanity check against actual race results to see where the baseline is close and where it drifts."),
+                plotOutput("baseline_model_fit_plot", height = "320px"),
+                tableOutput("baseline_model_loocv")
+              )
             )
           )
         )
