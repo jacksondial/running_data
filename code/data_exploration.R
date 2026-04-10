@@ -6,7 +6,7 @@ pacman::p_load(
   ggplot2
 )
 
-activity_dat <- read.csv("data/strava/January_29_2026/activities.csv") |> 
+activity_dat <- read.csv("data/strava/April_03_2026/activities.csv") |> 
   select(where(~ !all(is.na(.))), -Athlete.Weight) |> # Remove all columns that are all missing values
   filter(Activity.Type == "Run",
          Elapsed.Time < 100000,
@@ -15,7 +15,7 @@ activity_dat <- read.csv("data/strava/January_29_2026/activities.csv") |>
                                   # and is essentially an outlier
          )
 
-labelled::generate_dictionary(activity_dat)
+# labelled::generate_dictionary(activity_dat)
 
 
 activity_dat2 <- activity_dat |> 
