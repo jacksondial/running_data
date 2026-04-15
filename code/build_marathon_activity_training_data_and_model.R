@@ -153,13 +153,19 @@ app_dat <- raw_activities |>
     avg_speed_mph = if_else(Moving.Time > 0, (distance_miles / Moving.Time) * 3600, NA_real_),
     avg_pace_mile = 60 / avg_speed_mph
   ) |>
-  filter(!is.na(date)) |>
+  filter(!is.na(date),
+         # JD: removing this ID because it is from August 8, 2019, almost a year 
+         # before any other activities and thus is not relevant
+         Activity.ID != "2601897999"
+         ) |>
   arrange(date_time)
 
 if (nrow(app_dat) == 0) {
   stop("No run activities found after filtering. Cannot continue.")
 }
 
+# JD: this is marking all activities in the top quarter of relative.effort as a
+# 'hard effort'. this is probably generally true across all my training
 hard_effort_threshold <- stats::quantile(app_dat$Relative.Effort, probs = 0.75, na.rm = TRUE)
 if (is.na(hard_effort_threshold)) {
   hard_effort_threshold <- Inf
@@ -287,6 +293,18 @@ daily_features <- daily_dat |>
     log_lifetime_miles = log(lifetime_miles + 1)
   )
 
+##### NOTES FROM JACK #####
+# So this code above is using the the riegel formula on recent porformances 
+# (window is different for each race distance) in training to calculate an
+# equivalent marathon performance. It is limited by only allowing efforts that
+# are within a certain distance threshold for each-- so I can only have a faster
+# recent 5k if my run distance was within 20% of a 5k distance (2.49-3.73 miles)
+# which is not very common and if it is is likely not accurate. However, the
+# longer these races are, the more accurate it would be because i am more likely
+# IN TRAINING to run ~13 miles near HMP than I am to run ~3.1 miles @ 5K pace. 
+# This logic lines up with the weighted_mean_available() function call to create
+# recent_perf_eq_minutes, as it weights the half more than the 10k etc.
+
 # One row per activity, with full-history context attached.
 activity_features <- app_dat |>
   left_join(daily_features, by = "date") |>
@@ -355,6 +373,8 @@ races_final <- races |>
   mutate(
     race_marathon_equiv_minutes = riegel_to_marathon(race_time_minutes, race_distance_miles),
     feature_date = race_date - 1,
+    # This sample weight is helpful because a marathon is more predictive of a
+    # marathon than a 5K is predictive of a marathon
     sample_weight = case_when(
       race_distance_miles >= 20 ~ 1.00,
       race_distance_miles >= 12 ~ 0.90,
@@ -363,6 +383,10 @@ races_final <- races |>
       TRUE ~ 0.55
     )
   )
+
+###############################################################################
+##### This is where I stopped reviewing the code so far
+###############################################################################
 
 race_samples <- races_final |>
   left_join(
