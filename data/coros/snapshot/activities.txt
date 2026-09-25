@@ -1,0 +1,57 @@
+date|sport|location|duration|distance_km|avg_pace_km|avg_hr|calories
+2026-09-24|Outdoor Run|Boston Run|48:33|9.37|5:11|137|634
+2026-09-23|Outdoor Run|Boston Run|6:26|1.19|5:23|131|78
+2026-09-23|Outdoor Run|Boston Run|1:05:09|14.86|4:23|156|1048
+2026-09-22|Outdoor Run|Boston Run|51:31|9.79|5:16|126|594
+2026-09-21|Outdoor Run|Boston Run|44:18|8.29|5:21|132|545
+2026-09-19|Outdoor Run|Sands Point Run|2:11:09|27.99|4:41|157|2121
+2026-09-17|Outdoor Run|Boston Run|53:00|9.67|5:29|136|688
+2026-09-16|Outdoor Run|Davis County Run|46:56|10.99|4:16|160|786
+2026-09-15|Outdoor Run|Davis County Run|37:05|6.13|6:03|114|361
+2026-09-10|Outdoor Run|Davis County Run|58:44|9.70|6:03|120|624
+2026-09-09|Outdoor Run|Davis County Run|1:01:47|9.34|6:37|118|629
+2026-09-06|Outdoor Run|New York County Run|1:04:13|12.57|5:07|133|800
+2026-09-05|Outdoor Run|New York County Run|38:52|7.09|5:29|124|433
+2026-09-04|Outdoor Run|Boston Run|2:31:28|34.07|4:27|162|2572
+2026-09-03|Outdoor Run|Boston Run|42:20|8.10|5:14|137|555
+2026-09-02|Outdoor Run|Boston Run|49:56|9.74|5:08|131|607
+2026-09-01|Outdoor Run|Boston Run|50:24|11.28|4:28|150|766
+2026-08-29|Outdoor Run|Boston Run|1:42:17|23.34|4:23|162|1740
+2026-08-28|Outdoor Run|Boston Run|41:55|7.23|5:48|131|510
+2026-08-27|Outdoor Run|Boston Run|48:49|9.67|5:03|138|647
+2026-08-26|Outdoor Run|Boston Run|1:02:21|14.52|4:18|162|1060
+2026-08-25|Outdoor Run|Boston Run|54:34|10.33|5:17|136|706
+2026-08-23|Outdoor Run|Boston Run|1:26:14|16.11|5:21|129|1047
+2026-08-22|Outdoor Run|Boston Run|2:22:51|29.00|4:56|143|2038
+2026-08-21|Outdoor Run|Boston Run|37:07|6.39|5:48|117|385
+2026-08-20|Outdoor Run|Boston Run|58:35|10.94|5:21|130|716
+2026-08-19|Outdoor Run|Boston Run|1:06:07|14.63|4:31|158|1108
+2026-08-18|Outdoor Run|Boston Run|1:08:56|12.70|5:26|127|813
+2026-08-15|Outdoor Run|Boston Run|1:47:17|22.81|4:42|159|1817
+2026-08-14|Outdoor Run|Boston Run|45:10|7.63|5:55|123|515
+2026-08-13|Track Run|Cambridge Track Run|4:53|1.61|3:02|169|108
+2026-08-13|Outdoor Run|Boston Run|7:21|1.47|5:00|130|90
+2026-08-13|Outdoor Run|Boston Run|6:48|1.29|5:15|126|80
+2026-08-12|Outdoor Run|Boston Run|35:38|7.15|4:59|145|520
+2026-08-11|Outdoor Run|Boston Run|41:31|8.07|5:09|134|535
+2026-08-10|Outdoor Run|Boston Run|16:56|3.47|4:53|130|214
+2026-08-09|Outdoor Run|Boston Run|1:40:54|19.13|5:17|137|1341
+2026-08-07|Outdoor Run|Boston Run|57:07|10.22|5:35|128|687
+2026-08-06|Outdoor Run|Boston Run|1:04:39|13.53|4:47|151|1003
+2026-08-05|Outdoor Run|Boston Run|38:03|7.29|5:13|138|516
+2026-08-04|Outdoor Run|Boston Run|1:04:40|13.54|4:47|150|1005
+2026-08-01|Outdoor Run|Boston Run|1:57:22|23.48|5:00|158|1972
+2026-07-30|Outdoor Run|Boston Run|1:02:13|11.54|5:23|137|840
+2026-07-29|Outdoor Run|Boston Run|1:03:06|14.09|4:29|164|1125
+2026-07-27|Outdoor Run|Louisville Run|36:47|6.47|5:41|121|401
+2026-07-26|Outdoor Run|Nashville Run|42:09|7.83|5:23|136|552
+2026-07-25|Outdoor Run|Boston Run|1:09:42|13.81|5:03|140|961
+2026-07-24|Outdoor Run|Boston Run|28:15|4.66|6:04|119|299
+2026-07-23|Outdoor Run|Boston Run|50:35|9.59|5:17|135|661
+2026-07-22|Outdoor Run|Boston Run|53:06|11.62|4:34|162|913
+2026-07-21|Outdoor Run|Boston Run|49:34|9.24|5:22|129|603
+2026-07-18|Outdoor Run|Boston Run|44:35|8.57|5:12|143|636
+2026-07-17|Outdoor Run|Boston Run|39:45|6.64|5:59|122|440
+2026-07-16|Track Run|Cambridge Track Run|17:54|4.99|3:35|185|379
+2026-07-16|Outdoor Run|Cambridge Run|4:56|0.868|5:41|132|63
+2026-07-15|Indoor Run|Indoor Run|25:54|4.86|5:20|132|232
