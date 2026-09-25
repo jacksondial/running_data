@@ -1,4 +1,41 @@
+# R
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# OS
+.DS_Store
+**/.DS_Store
+
+# Secrets -- never commit the real env file, only the .example template
+.env
+.env.*
+!.env.*.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# ---------------------------------------------------------------------------
+# Personal training data. These contain GPS traces that start and end at home,
+# plus photos and videos, so they stay local. Anything the app needs to run
+# should be a derived/aggregated file added as an explicit exception below.
+# ---------------------------------------------------------------------------
+data/
+*.fit
+*.gpx
+*.tcx
+*.fit.gz
+*.gpx.gz
+
+# Personal media at the repo root
+*.heic
+*.HEIC
+running_pic.jpg
+running_19APR26.heic
+boston_26_kit.jpeg
+
+# Screenshots kept for the README / write-ups are fine to track; add them with
+# `git add -f <file>` so this blanket ignore does not swallow them.
