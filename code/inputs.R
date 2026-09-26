@@ -148,3 +148,27 @@ corosInputsUI <- function(id){
     )
   )
 }
+
+# Shared timeframe control for the COROS charts. Rendered once per chart tab
+# (Shiny needs unique ids) and kept in sync by observers in server.R, so the
+# choice follows you from tab to tab.
+COROS_RANGES <- c(
+  "Last 30 days",
+  "Last 3 months",
+  "Last 6 months",
+  "Last 12 months",
+  "All time"
+)
+
+corosRangeUI <- function(id, selected = "Last 3 months") {
+  ns <- NS(id)
+  tagList(
+    selectInput(
+      ns("range"),
+      "Timeframe",
+      choices = COROS_RANGES,
+      selected = selected
+    ),
+    div(class = "coros-range-note", uiOutput(ns("range_note")))
+  )
+}

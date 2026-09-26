@@ -57,59 +57,116 @@ coros_nav <- function() {
     tabPanel(
       "Training Load",
       value = "coros_load",
-      card(
-        class = "analysis-plot-card",
-        plotOutput("coros_load_plot", height = "330px"),
-        plotOutput("coros_load_ratio_plot", height = "330px")
-      )
-    ),
-
-    tabPanel(
-      "Recovery & Sleep",
-      value = "coros_recovery",
-      tabsetPanel(
-        id = "coros_recovery_tabs",
-        tabPanel(
-          "HRV & Resting HR",
+      sidebarLayout(
+        sidebarPanel(width = 2, corosRangeUI("cload")),
+        mainPanel(
+          width = 10,
           card(
-            class = "analysis-plot-card",
-            plotOutput("coros_hrv_plot", height = "330px"),
-            plotOutput("coros_rhr_plot", height = "330px")
-          )
-        ),
-        tabPanel(
-          "Sleep",
-          card(
-            class = "analysis-plot-card",
-            plotOutput("coros_sleep_plot", height = "330px"),
-            plotOutput("coros_sleep_score_plot", height = "330px")
+            class = "analysis-plot-card coros-plot-stack",
+            girafeOutput("coros_load_plot", height = "380px"),
+            girafeOutput("coros_load_ratio_plot", height = "380px")
           )
         )
       )
     ),
 
     tabPanel(
-      "Running Log",
+      "Recovery & Sleep",
+      value = "coros_recovery",
+      sidebarLayout(
+        sidebarPanel(width = 2, corosRangeUI("crec")),
+        mainPanel(
+          width = 10,
+      tabsetPanel(
+        id = "coros_recovery_tabs",
+        tabPanel(
+          "HRV & Resting HR",
+          card(
+            class = "analysis-plot-card",
+            girafeOutput("coros_hrv_plot", height = "380px"),
+            girafeOutput("coros_rhr_plot", height = "380px")
+          )
+        ),
+        tabPanel(
+          "Sleep",
+          card(
+            class = "analysis-plot-card",
+            girafeOutput("coros_sleep_plot", height = "380px"),
+            girafeOutput("coros_sleep_score_plot", height = "380px")
+          )
+        )
+      )
+        )
+      )
+    ),
+
+    tabPanel(
+      "Training Log",
       value = "coros_running",
+      sidebarLayout(
+        sidebarPanel(width = 2, corosRangeUI("clog")),
+        mainPanel(
+          width = 10,
       tabsetPanel(
         id = "coros_running_tabs",
         tabPanel(
-          "Volume",
+          "Volume by Sport",
           card(
             class = "analysis-plot-card",
-            plotOutput("coros_weekly_plot", height = "620px")
+            girafeOutput("coros_weekly_hours_plot", height = "380px"),
+            girafeOutput("coros_weekly_miles_plot", height = "380px")
           )
         ),
         tabPanel(
           "Pace vs HR",
           card(
             class = "analysis-plot-card",
-            plotOutput("coros_pace_hr_plot", height = "620px")
+            girafeOutput("coros_pace_hr_plot", height = "600px")
           )
         ),
         tabPanel(
-          "Recent Runs",
-          card(tableOutput("coros_recent_runs"))
+          "Recent Sessions",
+          card(
+            div(class = "fhm-callout",
+                p("Every sport COROS recorded, newest first. Cycling shows speed rather than pace; strength records neither.")),
+            uiOutput("coros_sport_totals"),
+            tableOutput("coros_recent_runs")
+          )
+        )
+      )
+        )
+      )
+    ),
+
+    tabPanel(
+      "Race Predictor",
+      value = "coros_predictor",
+      card(
+        div(
+          class = "lp-hero",
+          h2("COROS Race Predictor"),
+          p("COROS's own race estimates, what feeds them, and how the calculation works.")
+        ),
+        uiOutput("coros_predictor_boxes"),
+        div(
+          class = "baseline-step",
+          h4("How COROS Calculates This"),
+          p("COROS documents its method rather than publishing a formula. These are its own stated rules."),
+          uiOutput("coros_predictor_method")
+        ),
+        div(
+          class = "baseline-step",
+          h4("Your Six-Week Window"),
+          p("COROS uses a rolling six-week window; anything older drops out. Each bar is a run inside it, coloured by the role COROS assigns."),
+          girafeOutput("coros_predictor_window_plot", height = "400px"),
+          uiOutput("coros_window_summary")
+        ),
+        div(
+          class = "baseline-step",
+          h4("Running Fitness Breakdown"),
+          p("COROS scores four ability areas on a 40-100 scale, each judged by its own criterion."),
+          tableOutput("coros_fitness_breakdown_table"),
+          uiOutput("coros_predictor_sources")
         )
       )
     ),

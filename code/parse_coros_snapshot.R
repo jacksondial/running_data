@@ -53,15 +53,31 @@ scalar_field <- function(lines, label) {
 }
 
 # ---- activities ------------------------------------------------------------
+# Multi-sport: runs carry a pace, rides carry a speed, strength carries neither.
+# Distance is therefore NOT comparable across sports -- duration and COROS load
+# are the cross-sport currencies, so both are derived for every row.
 activities <- read_psv("activities.txt") |>
   mutate(
     date = as.Date(date),
-    across(c(distance_km, avg_hr, calories), as.numeric),
+    across(c(distance_km, avg_speed_kmh, avg_hr, calories), as.numeric),
     duration_min = hms_to_minutes(duration),
+    duration_hr = duration_min / 60,
     pace_min_km = hms_to_minutes(avg_pace_km),
     distance_mi = distance_km * 0.621371,
     pace_min_mi = pace_min_km / 0.621371,
-    is_workout = sport == "Track Run" | pace_min_km <= 4.6
+    speed_mph = avg_speed_kmh * 0.621371,
+    # Rides report speed; express them as a pace too so one column works for both.
+    pace_min_mi = dplyr::if_else(
+      is.na(pace_min_mi) & !is.na(speed_mph) & speed_mph > 0,
+      60 / speed_mph,
+      pace_min_mi
+    ),
+    # A hard running effort: track work, or quicker than ~4:36/km.
+    is_workout = sport_group == "Run" & (sport == "Track Run" | pace_min_km <= 4.6),
+    # COROS weights long runs over 30 km toward the marathon prediction
+    # specifically (see the Race Predictor tab for the sourcing).
+    is_marathon_stimulus = sport_group == "Run" & distance_km >= 30,
+    is_threshold_stimulus = sport_group == "Run" & duration_min >= 45 & !is.na(pace_min_km) & pace_min_km <= 4.6
   ) |>
   arrange(date)
 
@@ -110,13 +126,25 @@ hrv_dat <- tibble(line = grep("^\\d{4}-\\d{2}-\\d{2}:", hrv_lines, value = TRUE)
   select(-line)
 
 # Per-day running totals, so load/recovery can be read against what was actually run
+# Per-day totals. Running distance stays its own column (it is what marathon
+# training is measured in), but the all-sport columns are what the fatigue and
+# fitness views use, so cycling and strength are not invisible.
 daily_runs <- activities |>
   group_by(date) |>
   summarise(
-    run_km = sum(distance_km, na.rm = TRUE),
-    run_mi = sum(distance_mi, na.rm = TRUE),
-    run_min = sum(duration_min, na.rm = TRUE),
-    run_count = n(),
+    run_km = sum(distance_km[sport_group == "Run"], na.rm = TRUE),
+    run_mi = sum(distance_mi[sport_group == "Run"], na.rm = TRUE),
+    run_min = sum(duration_min[sport_group == "Run"], na.rm = TRUE),
+    run_count = sum(sport_group == "Run"),
+    bike_km = sum(distance_km[sport_group == "Bike"], na.rm = TRUE),
+    bike_mi = sum(distance_mi[sport_group == "Bike"], na.rm = TRUE),
+    bike_min = sum(duration_min[sport_group == "Bike"], na.rm = TRUE),
+    bike_count = sum(sport_group == "Bike"),
+    strength_min = sum(duration_min[sport_group == "Strength"], na.rm = TRUE),
+    strength_count = sum(sport_group == "Strength"),
+    total_min = sum(duration_min, na.rm = TRUE),
+    total_count = n(),
+    total_calories = sum(calories, na.rm = TRUE),
     day_avg_hr = round(weighted.mean(avg_hr, duration_min, na.rm = TRUE)),
     .groups = "drop"
   )
@@ -136,7 +164,9 @@ daily <- tibble(date = seq(min(all_dates), max(all_dates), by = "day")) |>
   left_join(hrv_dat, by = "date") |>
   left_join(daily_runs, by = "date") |>
   mutate(
-    across(c(run_km, run_mi, run_min, run_count), \(x) tidyr::replace_na(x, 0)),
+    across(c(run_km, run_mi, run_min, run_count, bike_km, bike_mi, bike_min,
+             bike_count, strength_min, strength_count, total_min, total_count,
+             total_calories), \(x) tidyr::replace_na(x, 0)),
     week_monday = as.Date(cut(date, "week", start.on.monday = TRUE))
   )
 
@@ -164,5 +194,7 @@ readr::write_csv(activities, file.path(out_dir, "coros_activities.csv"))
 readr::write_csv(summary_row, file.path(out_dir, "coros_summary.csv"))
 
 cat("coros_daily.csv     ", nrow(daily), "days   ", format(min(daily$date)), "->", format(max(daily$date)), "\n")
-cat("coros_activities.csv", nrow(activities), "runs\n")
+cat("coros_activities.csv", nrow(activities), "activities  ",
+    paste(names(table(activities$sport_group)), as.integer(table(activities$sport_group)),
+          sep = "=", collapse = "  "), "\n")
 cat("coros_summary.csv   ", nrow(summary_row), "row\n")

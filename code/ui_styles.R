@@ -351,6 +351,34 @@ app_styles <- function() {
       .coros-badge {
         margin-top: 0;
       }
+      .coros-range-note {
+        margin-top: 6px;
+        border-top: 1px solid #3A434F;
+        padding-top: 10px;
+      }
+      .coros-cov-title {
+        color: #9DB0C4 !important;
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .coros-cov-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 0.8rem;
+        padding: 2px 0;
+      }
+      .coros-cov-name { color: #A9B7C6; }
+      .coros-cov-n { color: #E6EEF5; font-variant-numeric: tabular-nums; }
+      .coros-cov-none { color: #6B7785; }
+      .coros-cov-foot {
+        color: #7C8896 !important;
+        font-size: 0.72rem;
+        margin-top: 9px;
+        line-height: 1.35;
+      }
     "))
   )
 }

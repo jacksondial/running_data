@@ -745,30 +745,120 @@ server <- function(input, output, session){
     )
   })
 
-  output$coros_load_plot <- renderPlot({ coros_load_plot() })
-  output$coros_load_ratio_plot <- renderPlot({ coros_load_ratio_plot() })
-  output$coros_hrv_plot <- renderPlot({ coros_hrv_plot() })
-  output$coros_rhr_plot <- renderPlot({ coros_rhr_plot() })
-  output$coros_sleep_plot <- renderPlot({ coros_sleep_plot() })
-  output$coros_sleep_score_plot <- renderPlot({ coros_sleep_score_plot() })
-  output$coros_weekly_plot <- renderPlot({ coros_weekly_plot() })
-  output$coros_pace_hr_plot <- renderPlot({ coros_pace_hr_plot() })
+  # ---- shared timeframe ----------------------------------------------------
+  # Shiny needs unique input ids, so each chart tab renders its own selector.
+  # These observers keep the three in step, which makes the choice feel like one
+  # shared control rather than three independent ones. The identical() guard
+  # stops them ping-ponging.
+  coros_range_ids <- c("cload", "crec", "clog")
+
+  # One source of truth. Whichever selector the user touches writes here, and
+  # the others are updated to match, so the three read as a single control.
+  coros_range_rv <- reactiveVal("Last 3 months")
+
+  for (this_id in coros_range_ids) {
+    local({
+      src <- this_id
+      observeEvent(input[[paste0(src, "-range")]], {
+        val <- input[[paste0(src, "-range")]]
+        if (is.null(val)) return()
+        if (!identical(coros_range_rv(), val)) coros_range_rv(val)
+        for (dst in setdiff(coros_range_ids, src)) {
+          if (!identical(input[[paste0(dst, "-range")]], val)) {
+            updateSelectInput(session, paste0(dst, "-range"), selected = val)
+          }
+        }
+      }, ignoreInit = TRUE)
+    })
+  }
+
+  coros_range <- reactive(coros_range_rv())
+
+  # Sidebar note: what the window resolves to, and how much data each stream
+  # actually has behind it (COROS serves different depths per metric).
+  coros_range_note_ui <- function() {
+    renderUI({
+      cap <- coros_range_caption(coros_range())
+      rows <- lapply(cap$rows, function(r) {
+        short <- r$shown < r$total
+        div(
+          class = "coros-cov-row",
+          span(class = "coros-cov-name", r$name),
+          span(class = paste0("coros-cov-n", if (r$shown == 0) " coros-cov-none" else ""),
+               paste0(r$shown, if (short) paste0(" / ", r$total) else "", " d"))
+        )
+      })
+      tagList(
+        div(class = "coros-cov-title", "Days with data in view"),
+        div(rows),
+        div(class = "coros-cov-foot",
+            "Training load is capped near 30 days by the COROS API; HRV, sleep and resting HR begin Dec 2025.")
+      )
+    })
+  }
+  output$`cload-range_note` <- coros_range_note_ui()
+  output$`crec-range_note` <- coros_range_note_ui()
+  output$`clog-range_note` <- coros_range_note_ui()
+
+  # All COROS charts are ggiraph, so every mark carries a hover tooltip.
+  output$coros_load_plot <- renderGirafe({ coros_load_plot(coros_range()) })
+  output$coros_load_ratio_plot <- renderGirafe({ coros_load_ratio_plot(coros_range()) })
+  output$coros_hrv_plot <- renderGirafe({ coros_hrv_plot(coros_range()) })
+  output$coros_rhr_plot <- renderGirafe({ coros_rhr_plot(coros_range()) })
+  output$coros_sleep_plot <- renderGirafe({ coros_sleep_plot(coros_range()) })
+  output$coros_sleep_score_plot <- renderGirafe({ coros_sleep_score_plot(coros_range()) })
+  output$coros_weekly_hours_plot <- renderGirafe({ coros_weekly_hours_plot(coros_range()) })
+  output$coros_weekly_miles_plot <- renderGirafe({ coros_weekly_miles_plot(coros_range()) })
+  output$coros_pace_hr_plot <- renderGirafe({ coros_pace_hr_plot(coros_range()) })
+  output$coros_predictor_window_plot <- renderGirafe({ coros_predictor_window_plot() })
 
   output$coros_recent_runs <- renderTable({
     coros_activities |>
+      coros_in_range(coros_range()) |>
       dplyr::arrange(dplyr::desc(date)) |>
-      utils::head(20) |>
+      utils::head(25) |>
       dplyr::transmute(
         Date = format(date, "%b %d"),
-        Type = sport,
+        Sport = sport,
         Location = location,
-        Miles = round(distance_mi, 2),
         Time = duration,
-        `Pace /mi` = vapply(pace_min_mi, fmt_pace, character(1)),
+        Miles = dplyr::if_else(is.na(distance_mi), NA_character_,
+                               format(round(distance_mi, 2), nsmall = 2)),
+        # Runs get pace, rides get speed -- one column each rather than forcing
+        # both sports into a single misleading number.
+        `Pace /mi` = dplyr::if_else(sport_group == "Run" & !is.na(pace_min_mi),
+                                    vapply(pace_min_mi, fmt_pace, character(1)), NA_character_),
+        `Speed mph` = dplyr::if_else(sport_group == "Bike" & !is.na(speed_mph),
+                                     format(round(speed_mph, 1), nsmall = 1), NA_character_),
         `Avg HR` = avg_hr,
         Cal = calories
       )
-  }, striped = TRUE, width = "100%")
+  }, striped = TRUE, width = "100%", na = "-")
+
+  output$coros_sport_totals <- renderUI({
+    tot <- coros_activities |>
+      coros_in_range(coros_range()) |>
+      dplyr::group_by(sport_group) |>
+      dplyr::summarise(
+        n = dplyr::n(),
+        hours = sum(duration_min, na.rm = TRUE) / 60,
+        miles = sum(distance_mi, na.rm = TRUE),
+        .groups = "drop"
+      )
+
+    cards <- lapply(seq_len(nrow(tot)), function(i) {
+      r <- tot[i, ]
+      div(
+        class = "fhm-metric-card",
+        div(class = "fhm-metric-label", r$sport_group),
+        div(class = "fhm-metric-value", paste0(sprintf("%.1f", r$hours), " h")),
+        div(class = "coros-metric-sub",
+            paste0(r$n, " sessions",
+                   if (r$miles > 0) paste0(" - ", round(r$miles), " mi") else ""))
+      )
+    })
+    div(class = "fhm-metric-grid", cards)
+  })
 
   output$coros_data_status <- renderUI({
     streams <- list(
@@ -808,6 +898,129 @@ server <- function(input, output, session){
             div(class = "coros-metric-sub",
                 paste0(as.integer(Sys.Date() - coros_snapshot_date), " days old")))
       )
+    )
+  })
+
+  # ---- COROS race predictor ------------------------------------------------
+
+  output$coros_predictor_boxes <- renderUI({
+    preds <- list(
+      list("5K", coros_summary$pred_5k[1], "#5FA8D3"),
+      list("10K", coros_summary$pred_10k[1], "#00C2FF"),
+      list("Half Marathon", coros_summary$pred_half[1], "#F9C846"),
+      list("Marathon", coros_summary$pred_marathon[1], "#23D18B")
+    )
+    boxes <- lapply(preds, function(x) {
+      coros_box(x[[1]], x[[2]], "COROS estimate", x[[3]])
+    })
+    div(class = "coros-metric-grid", boxes)
+  })
+
+  output$coros_predictor_method <- renderUI({
+    tagList(
+      div(
+        class = "fhm-metric-grid",
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Data window"),
+            div(class = "fhm-metric-value", "6 weeks"),
+            div(class = "coros-metric-sub", "older training ages out")),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Running Fitness"),
+            div(class = "fhm-metric-value", coros_summary$running_level[1]),
+            div(class = "coros-metric-sub", "on COROS's 40-100 scale")),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "VO2max"),
+            div(class = "fhm-metric-value", coros_summary$vo2max[1]),
+            div(class = "coros-metric-sub", "feeds the ~3 km Speed score")),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Threshold pace"),
+            div(class = "fhm-metric-value", sub(" /km", "", coros_summary$threshold_pace_km[1])),
+            div(class = "coros-metric-sub", "per km - feeds Endurance"))
+      ),
+      tags$ul(
+        class = "coros-roadmap",
+        tags$li(tags$strong("Pace against heart rate, not distance scaling. "),
+                "COROS estimates fitness from the pace-to-heart-rate relationship in your runs, rather than scaling one race result up with a Riegel-style exponent."),
+        tags$li(tags$strong("Distance-specific. "),
+                "Long runs beyond 30 km move the marathon estimate specifically, while a 60-minute threshold run moves the 10K and half estimates."),
+        tags$li(tags$strong("Four ability areas. "),
+                "Running Fitness decomposes into Base (>30 km), Endurance (~10 km), Speed (~3 km) and Sprint (~400 m), each judged by its own criterion."),
+        tags$li(tags$strong("Pace-Duration Model. "),
+                "Pace zones come from fitting Maximal Speed, Anaerobic Work and Critical Speed, the last of which sits close to threshold pace."),
+        tags$li(tags$strong("Ideal conditions assumed. "),
+                "COROS states the predictions assume ideal weather and course conditions, so they are a fitness ceiling rather than a race-day forecast.")
+      ),
+      div(
+        class = "fhm-callout",
+        p(tags$strong("Cycling does not move these numbers."),
+          " Running Fitness is running-only, so your rides feed COROS's training load, recovery and HRV, but not the race predictor. That cuts both ways: the aerobic base from cycling is real, and the predictor cannot see it.")
+      )
+    )
+  })
+
+  output$coros_window_summary <- renderUI({
+    p <- coros_predictor_inputs()
+
+    long_note <- if (is.na(p$days_since_long)) {
+      "No run over 30 km inside the window - the marathon estimate is leaning on shorter running."
+    } else {
+      paste0("Last run over 30 km was ", p$days_since_long,
+             " days ago (", format(p$last_long_run, "%b %d"), ").")
+    }
+
+    tagList(
+      div(
+        class = "fhm-metric-grid",
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Runs in window"),
+            div(class = "fhm-metric-value", p$n_runs),
+            div(class = "coros-metric-sub", paste0(round(p$run_miles), " mi / ", sprintf("%.1f", p$run_hours), " h"))),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Over 30 km"),
+            div(class = "fhm-metric-value", p$n_marathon_stimulus),
+            div(class = "coros-metric-sub", "drives the marathon estimate")),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Threshold sessions"),
+            div(class = "fhm-metric-value", p$n_threshold_stimulus),
+            div(class = "coros-metric-sub", "drive 10K and half")),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Longest run"),
+            div(class = "fhm-metric-value", paste0(round(p$longest_mi, 1), " mi")),
+            div(class = "coros-metric-sub", "inside the window")),
+        div(class = "fhm-metric-card",
+            div(class = "fhm-metric-label", "Cycling in window"),
+            div(class = "fhm-metric-value", paste0(sprintf("%.0f", p$bike_hours), " h")),
+            div(class = "coros-metric-sub", "not counted by the predictor"))
+      ),
+      div(class = "fhm-callout", p(long_note))
+    )
+  })
+
+  output$coros_fitness_breakdown_table <- renderTable({
+    coros_fitness_breakdown()
+  }, striped = TRUE, width = "100%")
+
+  output$coros_predictor_sources <- renderUI({
+    div(
+      class = "fhm-callout",
+      p(tags$strong("Sources"), " - COROS's own documentation and reporting on it:"),
+      tags$ul(
+        class = "coros-roadmap",
+        tags$li(tags$a(href = "https://coros.com/stories/coros-metrics/c/introducing-running-fitness",
+                       target = "_blank", rel = "noopener", "COROS - Introducing Running Fitness"),
+                " (40-100 scale, the four ability areas, six-week window)"),
+        tags$li(tags$a(href = "https://support.coros.com/hc/en-us/articles/360061452651-EvoLab-Metrics",
+                       target = "_blank", rel = "noopener", "COROS Help Center - EvoLab Metrics"),
+                " (Pace-Duration Model, threshold pace)"),
+        tags$li(tags$a(href = "https://coros.com/stories/coros-coaches/c/5-features-to-know-for-your-next-road-race",
+                       target = "_blank", rel = "noopener", "COROS - Race day watch features"),
+                " (what the Race Predictor widget shows)"),
+        tags$li(tags$a(href = "https://www.gneta.app/blog/race-predictors-compared",
+                       target = "_blank", rel = "noopener", "Gneta - Race Predictors Compared"),
+                " (six-week rolling window, distance-specific behaviour vs Garmin/Polar)")
+      ),
+      p(class = "text-muted",
+        "COROS has not published an exact formula. Everything above is its documented behaviour, not a reverse-engineered model, and nothing in this app recomputes the predictions.")
     )
   })
 }
