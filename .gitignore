@@ -1,4 +1,56 @@
+# R
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# OS
+.DS_Store
+**/.DS_Store
+
+# Secrets -- never commit the real env file, only the .example template
+.env
+.env.*
+!.env.*.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# ---------------------------------------------------------------------------
+# Personal training data. These contain GPS traces that start and end at home,
+# plus photos and videos, so they stay local. Anything the app needs to run
+# should be a derived/aggregated file added as an explicit exception below.
+# ---------------------------------------------------------------------------
+# Ignore everything under data/ by default. Note the trailing /* rather than a
+# bare data/ -- git cannot re-include a file whose parent DIRECTORY is excluded,
+# so the exceptions below only work with this form.
+data/*
+!data/coros/
+data/coros/*
+
+# Kept deliberately: the COROS snapshot (sleep/HRV/load numbers, no GPS, no PII).
+# coros_daily.csv and friends are regenerated from these by
+# code/parse_coros_snapshot.R, so they do not need tracking.
+!data/coros/snapshot/
+
+# Kept deliberately: aggregated Strava activity metadata so the app runs from a
+# clean clone. Dates/distances/HR/elevation only -- no GPS traces, no profile.
+!data/activity_dat2.RDS
+
+*.fit
+*.gpx
+*.tcx
+*.fit.gz
+*.gpx.gz
+
+# Personal media at the repo root
+*.heic
+*.HEIC
+running_pic.jpg
+running_19APR26.heic
+boston_26_kit.jpeg
+
+# Screenshots kept for the README / write-ups are fine to track; add them with
+# `git add -f <file>` so this blanket ignore does not swallow them.
