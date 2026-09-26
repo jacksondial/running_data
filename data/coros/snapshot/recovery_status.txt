@@ -1,6 +1,6 @@
 Recovery Status
 ========================
 
-Recovery: 84%
-Level: Moderate training recommended
-Estimated Full Recovery: 20h
+Recovery: 60%
+Level: Light training recommended
+Estimated Full Recovery: 41h
