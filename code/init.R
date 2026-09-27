@@ -1,42 +1,15 @@
+# Shared setup: packages and the ggplot theme every chart uses.
+
 pacman::p_load(
-  dplyr,
-  lubridate,
-  ggplot2,
-  shinydashboard,
   bslib,
-  shiny,
-  tidyr,
+  dplyr,
+  ggiraph,
+  ggplot2,
   glue,
-  ggiraph
+  readr,
+  shiny,
+  tidyr
 )
-print(getwd())
-source("riegel_calculation.R")
-
-app_dat <- readRDS("../data/activity_dat2.RDS")
-running_palette <- c(
-  "#0B2545",  # Deep performance navy
-  "#1B998B",  # Fresh teal
-  "#E84855",  # Energetic red
-  "#F9C846",  # Warm gold
-  "#2E7D32",  # Strong green
-  "#5FA8D3",  # Sky blue
-  "#6C4AB6",  # Modern purple accent
-  "#F4F1EC",  # Clean warm light
-  "#2F2F2F",  # Soft black / charcoal
-  "#FF9F1C"   # Bright orange accent
-)
-
-# Function to convert from minutes to a formatted duration
-format_duration <- function(minutes) {
-  duration <- seconds_to_period(minutes * 60)  # Convert minutes to seconds
-  sprintf("%d hours, %d minutes, and %d seconds", 
-          as.integer(duration@hour), 
-          as.integer(duration@minute), 
-          as.integer(duration@.Data))  # Convert to integer explicitly
-}
-
-source("data_derivations.R")
-source("training_blocks.R")
 
 theme_running_dark <- function(base_size = 13) {
   ggplot2::theme_minimal(base_size = base_size) +
@@ -56,9 +29,14 @@ theme_running_dark <- function(base_size = 13) {
     )
 }
 
-palette_categorical <- function(n) {
-  if (n <= 0) {
-    return(character(0))
-  }
-  grDevices::hcl.colors(n, palette = "viridis")
-}
+# ---- COROS data, charts, inputs and tabs ----------------------------------
+
+# The tidy CSVs are generated from the tracked snapshot, not tracked themselves;
+# build them on first run so a fresh clone works.
+if (!file.exists("../data/coros/coros_daily.csv")) source("parse_coros_snapshot.R")
+
+source("coros_data.R")    # COROS snapshot + derived metrics
+source("coros_plots.R")   # charts
+source("inputs.R")        # input modules
+source("ui_styles.R")     # app-wide CSS
+source("ui_coros.R")      # tabs
