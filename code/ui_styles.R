@@ -69,58 +69,8 @@ app_styles <- function() {
         font-size: 2rem;
         font-weight: 700;
       }
-      .lp-stat-card--readiness .value-box-value {
-        font-size: 1.45rem;
-      }
       .analysis-plot-card {
         min-height: 700px;
-      }
-      .riegel-shell {
-        padding: 10px 8px;
-      }
-      .riegel-hero {
-        background: linear-gradient(130deg, #252C35 0%, #29313B 45%, #313A45 100%);
-        border: 1px solid #3A434F;
-        border-radius: 16px;
-        padding: 22px 26px;
-        margin-bottom: 16px;
-      }
-      .riegel-hero h3 {
-        margin-bottom: 6px;
-        font-weight: 700;
-      }
-      .riegel-hero p {
-        margin-bottom: 0;
-        color: #A9B7C6 !important;
-      }
-      .riegel-metric-card {
-        background-color: #222831 !important;
-        border: 1px solid #3A434F !important;
-        border-radius: 14px !important;
-        min-height: 150px;
-      }
-      .riegel-metric-label {
-        color: #9DB0C4 !important;
-        font-size: 0.8rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-      }
-      .riegel-metric-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #E6EEF5;
-      }
-      .riegel-metric-sub {
-        color: #9AA4B2 !important;
-        margin-top: 8px;
-      }
-      .riegel-details {
-        background-color: #222831;
-        border: 1px solid #3A434F;
-        border-radius: 14px;
-        padding: 18px 20px;
-        margin-top: 14px;
       }
       .baseline-step {
         background-color: #252C35;
@@ -174,13 +124,6 @@ app_styles <- function() {
         font-weight: 700;
         margin-top: 4px;
       }
-      .riegel-details h5 {
-        margin-bottom: 12px;
-      }
-      .riegel-details p {
-        color: #C8D3DF !important;
-        margin-bottom: 6px;
-      }
       .nav-tabs .nav-link {
         color: #A9B7C6 !important;
       }
@@ -202,26 +145,6 @@ app_styles <- function() {
       .table tbody tr {
         border-color: #3A434F;
       }
-      .small-box {
-        font-size: 24px;
-        background-color: #00a65a !important;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-      }
-      .small-box h3 {
-        font-size: 34px;
-        font-weight: bold;
-        margin: 0;
-      }
-      .small-box p {
-        font-size: 18px;
-        margin-bottom: 10px;
-      }
-      .small-box .icon {
-        font-size: 50px;
-        margin-left: 10px;
-      }
       .coros-badge {
         display: inline-block;
         margin-top: 8px;
@@ -231,16 +154,6 @@ app_styles <- function() {
         letter-spacing: 0.06em;
         text-transform: uppercase;
         font-weight: 600;
-      }
-      .coros-badge--live {
-        background-color: rgba(35, 209, 139, 0.14);
-        border: 1px solid #23D18B;
-        color: #7BE8B8 !important;
-      }
-      .coros-badge--pending {
-        background-color: rgba(249, 200, 70, 0.12);
-        border: 1px solid #F9C846;
-        color: #F9D877 !important;
       }
       .coros-roadmap {
         color: #C8D3DF;
@@ -256,21 +169,6 @@ app_styles <- function() {
         border-radius: 4px;
         padding: 1px 5px;
         color: #5FA8D3;
-      }
-      .dropdown-menu {
-        background-color: #262D36;
-        border: 1px solid #3A434F;
-      }
-      .dropdown-item {
-        color: #C8D3DF !important;
-      }
-      .dropdown-item:hover, .dropdown-item:focus {
-        background-color: #313946;
-        color: #E6EEF5 !important;
-      }
-      .dropdown-item.active {
-        background-color: #313946;
-        color: #E6EEF5 !important;
       }
       .coros-metric-grid {
         display: grid;

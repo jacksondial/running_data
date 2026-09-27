@@ -405,3 +405,27 @@ coros_range_caption <- function(range_label) {
   })
   list(start = start, rows = rows)
 }
+
+# ---- landing page ----------------------------------------------------------
+# Headline numbers for the landing page. "This year" is the snapshot's year, not
+# Sys.Date()'s, so the tiles stay consistent with every other COROS view.
+
+coros_landing_stats <- function() {
+  yr <- as.integer(format(coros_snapshot_date, "%Y"))
+  this_year <- coros_activities |> dplyr::filter(format(date, "%Y") == as.character(yr))
+  last_year <- coros_activities |> dplyr::filter(format(date, "%Y") == as.character(yr - 1))
+  runs <- this_year |> dplyr::filter(sport_group == "Run")
+
+  weeks_elapsed <- as.numeric(coros_snapshot_date - as.Date(paste0(yr, "-01-01"))) / 7
+
+  list(
+    year = yr,
+    run_miles = sum(runs$distance_mi, na.rm = TRUE),
+    run_miles_last_year = sum(last_year$distance_mi[last_year$sport_group == "Run"], na.rm = TRUE),
+    bike_miles = sum(this_year$distance_mi[this_year$sport_group == "Bike"], na.rm = TRUE),
+    hours = sum(this_year$duration_min, na.rm = TRUE) / 60,
+    avg_weekly_run_miles = sum(runs$distance_mi, na.rm = TRUE) / max(weeks_elapsed, 1),
+    recovery_pct = coros_summary$recovery_pct[1],
+    recovery_level = coros_summary$recovery_level[1]
+  )
+}

@@ -1,19 +1,54 @@
-# COROS section of the navbar.
-#
-# Built on the point-in-time snapshot in data/coros/ (see coros_data.R). The
-# framing throughout is race-week readiness rather than season-long history:
-# COROS's value over the Strava export is its recovery/sleep/HRV signals, and
-# those matter most in a taper.
+# The app's tabs, all built on the COROS snapshot in data/coros/ (see
+# coros_data.R).
 #
 # Descriptive only -- every number here is either reported by COROS or a plain
 # summary of one. No models.
 
-coros_nav <- function() {
-  nav_menu(
-    "COROS",
-    value = "coros_section",
-    icon = icon("mountain-sun"),
+# Landing page: headline numbers for the snapshot year.
+landing_tab <- function() {
+  s <- coros_landing_stats()
+  fmt <- function(x, digits = 0) format(round(x, digits), big.mark = ",", nsmall = digits)
+  stat <- function(title, value, icon_name, color) {
+    value_box(
+      title = title,
+      value = value,
+      showcase = icon(icon_name),
+      theme = value_box_theme(bg = "#1B2028", fg = color),
+      class = "lp-stat-card",
+      fill = TRUE,
+      height = 175L
+    )
+  }
 
+  tabPanel(
+    "Home",
+    value = "landing_page",
+    card(
+      div(
+        class = "lp-hero",
+        h2("Training Snapshot"),
+        p(paste0("All sports, from COROS. Snapshot taken ",
+                 format(coros_snapshot_date, "%B %d, %Y"), "."))
+      ),
+      layout_column_wrap(
+        class = "lp-grid",
+        width = 1 / 3,
+        gap = "1rem",
+        stat(paste(s$year, "Run Miles"), fmt(s$run_miles), "person-running", "#00C2FF"),
+        stat(paste(s$year - 1, "Run Miles"), fmt(s$run_miles_last_year), "calendar-days", "#5FA8D3"),
+        stat(paste(s$year, "Bike Miles"), fmt(s$bike_miles), "bicycle", "#F9C846"),
+        stat(paste(s$year, "Avg Weekly Run Miles"), fmt(s$avg_weekly_run_miles, 1), "chart-line", "#F97316"),
+        stat(paste(s$year, "Training Hours"), fmt(s$hours), "stopwatch", "#C084FC"),
+        stat("Recovery", paste0(round(s$recovery_pct), "%"), "heart-pulse", "#23D18B")
+      )
+    )
+  )
+}
+
+# Everything after the landing page, as a list so ui.R can splice it straight
+# into the navbar.
+coros_tabs <- function() {
+  list(
     tabPanel(
       "Race Readiness",
       value = "coros_readiness",

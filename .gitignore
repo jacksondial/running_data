@@ -35,10 +35,6 @@ data/coros/*
 # code/parse_coros_snapshot.R, so they do not need tracking.
 !data/coros/snapshot/
 
-# Kept deliberately: aggregated Strava activity metadata so the app runs from a
-# clean clone. Dates/distances/HR/elevation only -- no GPS traces, no profile.
-!data/activity_dat2.RDS
-
 *.fit
 *.gpx
 *.tcx
